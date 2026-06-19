@@ -1,0 +1,45 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: agenda_ya/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: agenda_ya
+
+      - name: Run linter
+        run: npm run lint
+        working-directory: agenda_ya
+
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: agenda_ya
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+        working-directory: agenda_ya
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+        working-directory: agenda_ya
+
+      - name: Build project
+        run: npm run build
+        working-directory: agenda_ya
