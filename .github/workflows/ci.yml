@@ -37,7 +37,7 @@ jobs:
         working-directory: agenda_ya
 
       - name: Security audit
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=high
         working-directory: agenda_ya
 
       - name: Build project
