@@ -24,10 +24,22 @@ jobs:
         run: npm install
         working-directory: agenda_ya
 
-      - name: Run tests
-        run: npm test
+      - name: Run linter
+        run: npm run lint
+        working-directory: agenda_ya
+
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: agenda_ya
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+        working-directory: agenda_ya
+
+      - name: Security audit
+        run: npm audit --audit-level=moderate
         working-directory: agenda_ya
 
       - name: Build project
         run: npm run build
-        working-directory: agenda_ya 
+        working-directory: agenda_ya
