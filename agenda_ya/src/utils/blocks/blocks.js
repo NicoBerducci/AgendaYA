@@ -44,6 +44,65 @@ export const validateDeleteInterval = (activeReservations) => {
 };
 
 /**
+ * US_016: Cancelar bloqueo ante advertencia
+ */
+export const cancelBlockWithReservations = (hasConfirmed) => {
+    if (!hasConfirmed) {
+        return {
+            isValid: false,
+            errorMessage: 'Operación cancelada. El día no se bloqueó y las reservas se mantienen activas.',
+        };
+    }
+    return { isValid: true };
+};
+
+/**
+ * US_017: Desbloquear un día bloqueado
+ */
+export const unblockDay = (day, hasConfirmed) => {
+    if (!hasConfirmed) {
+        return {
+            isValid: false,
+            errorMessage: 'Tiene cambios sin guardar. ¿Desea descartar los cambios y cambiar de modo?',
+            day
+        };
+    }
+    return {
+        isValid: true,
+        successMessage: `Los siguientes días fueron desbloqueados exitosamente: ${day.date}`,
+        day: {
+            ...day,
+            status: 'Disponible',
+            isPublicSelectable: true
+        }
+    };
+};
+
+/**
+ * US_018: Visualizar días bloqueados
+ */
+export const getBlockedDayViewStatus = (day, currentDate) => {
+    const selectedDate = new Date(`${day.date}T00:00:00`);
+    const today = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+    );
+
+    if (selectedDate < today) {
+        return {
+            ...day,
+            isInteractable: false
+        };
+    }
+
+    return {
+        ...day,
+        isInteractable: true
+    };
+};
+
+/**
  * US_013: Bloquea un día futuro sin reservas activas
  */
 export const blockDayWithoutReservations = (day, currentDate, hasConfirmed) => {

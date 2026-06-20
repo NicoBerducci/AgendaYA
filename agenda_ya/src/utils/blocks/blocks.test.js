@@ -4,6 +4,9 @@ import {
     blockDayWithoutReservations,
     saveBlockReason,
     validateReservationsBeforeBlocking,
+    cancelBlockWithReservations,
+    unblockDay,
+    getBlockedDayViewStatus,
 } from './blocks';
 
 describe('Épica: Mantenimiento de Intervalos y Bloqueos', () => {
@@ -144,6 +147,56 @@ describe('Épica: Mantenimiento de Intervalos y Bloqueos', () => {
                 'Cancelar la operación',
                 'Reagendar reservas',
             ]);
+        });
+    });
+
+    // Prueba 6: Basada en US_016 (Cancelar bloqueo ante advertencia)
+    describe('US_016: Cancelar bloqueo ante advertencia', () => {
+        it('Debe cancelar la operación y mantener las reservas si no se confirma', () => {
+            const result = cancelBlockWithReservations(false);
+            expect(result.isValid).toBe(false);
+            expect(result.errorMessage).toBe('Operación cancelada. El día no se bloqueó y las reservas se mantienen activas.');
+        });
+
+        it('Debe devolver isValid true si el administrador confirma a pesar de la advertencia', () => {
+            const result = cancelBlockWithReservations(true);
+            expect(result.isValid).toBe(true);
+        });
+    });
+
+    // Prueba 7: Basada en US_017 (Desbloquear un día bloqueado)
+    describe('US_017: Desbloquear un día bloqueado', () => {
+        it('Debe desbloquear el día correctamente y mostrar mensaje', () => {
+            const day = { date: '2026-06-28', status: 'Bloqueado' };
+            const result = unblockDay(day, true);
+            expect(result.isValid).toBe(true);
+            expect(result.successMessage).toBe('Los siguientes días fueron desbloqueados exitosamente: 2026-06-28');
+            expect(result.day.status).toBe('Disponible');
+            expect(result.day.isPublicSelectable).toBe(true);
+        });
+
+        it('Debe cancelar el desbloqueo y advertir sobre cambios sin guardar', () => {
+            const day = { date: '2026-06-28', status: 'Bloqueado' };
+            const result = unblockDay(day, false);
+            expect(result.isValid).toBe(false);
+            expect(result.errorMessage).toBe('Tiene cambios sin guardar. ¿Desea descartar los cambios y cambiar de modo?');
+        });
+    });
+
+    // Prueba 8: Basada en US_018 (Visualizar días bloqueados)
+    describe('US_018: Visualizar días bloqueados', () => {
+        it('Debe marcar días pasados como no interactuables', () => {
+            const currentDate = new Date('2026-06-20');
+            const day = { date: '2026-06-10', status: 'Bloqueado' };
+            const result = getBlockedDayViewStatus(day, currentDate);
+            expect(result.isInteractable).toBe(false);
+        });
+
+        it('Debe marcar días futuros como interactuables', () => {
+            const currentDate = new Date('2026-06-20');
+            const day = { date: '2026-06-25', status: 'Bloqueado' };
+            const result = getBlockedDayViewStatus(day, currentDate);
+            expect(result.isInteractable).toBe(true);
         });
     });
 

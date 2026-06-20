@@ -45,3 +45,34 @@ export const validarLimiteDiario = (limite) => {
 
   return { isValid: true, sinLimite: false, valor: Number(limite) };
 };
+
+/**
+ * US_019: Configurar descanso entre reservas
+ */
+export const configureRestPeriod = (minutes) => {
+  const numMinutes = Number(minutes);
+  if (isNaN(numMinutes) || numMinutes < 0 || numMinutes > 120) {
+    return {
+      isValid: false,
+      errorMessage: "El intervalo debe estar entre 0 y 120 minutos",
+    };
+  }
+  return {
+    isValid: true,
+    successMessage: "El intervalo entre turnos fue configurado exitosamente",
+    valor: numMinutes,
+  };
+};
+
+/**
+ * US_020: Aplicar descanso en la agenda pública
+ */
+export const calculateNextAvailableSlot = (lastSlotEndTimeStr, restPeriodMinutes) => {
+  const [hours, minutes] = lastSlotEndTimeStr.split(":").map(Number);
+  const date = new Date(2000, 0, 1, hours, minutes);
+  date.setMinutes(date.getMinutes() + restPeriodMinutes);
+  const nextHours = String(date.getHours()).padStart(2, "0");
+  const nextMinutes = String(date.getMinutes()).padStart(2, "0");
+  return `${nextHours}:${nextMinutes}`;
+};
+

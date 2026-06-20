@@ -1,4 +1,4 @@
-import { validarAntelacion, esHorarioVisible, validarLimiteDiario } from './reglasDisponibilidad';
+import { validarAntelacion, esHorarioVisible, validarLimiteDiario, configureRestPeriod, calculateNextAvailableSlot } from './reglasDisponibilidad';
 
 describe('Épica: Reglas de Disponibilidad', () => {
 
@@ -56,6 +56,41 @@ describe('Épica: Reglas de Disponibilidad', () => {
       
       expect(resultado.isValid).toBe(true);
       expect(resultado.sinLimite).toBe(true);
+    });
+  });
+
+  // PRUEBA 4: correspondiente a US_019
+  describe('US_019: Configurar descanso entre reservas', () => {
+    it('Debe guardar el valor y mostrar mensaje de éxito si el intervalo está entre 0 y 120', () => {
+      const result = configureRestPeriod(15);
+      expect(result.isValid).toBe(true);
+      expect(result.successMessage).toBe('El intervalo entre turnos fue configurado exitosamente');
+      expect(result.valor).toBe(15);
+    });
+
+    it('Debe impedir el guardado y devolver error si el valor es mayor a 120', () => {
+      const result = configureRestPeriod(130);
+      expect(result.isValid).toBe(false);
+      expect(result.errorMessage).toBe('El intervalo debe estar entre 0 y 120 minutos');
+    });
+
+    it('Debe impedir el guardado y devolver error si el valor es menor a 0', () => {
+      const result = configureRestPeriod(-10);
+      expect(result.isValid).toBe(false);
+      expect(result.errorMessage).toBe('El intervalo debe estar entre 0 y 120 minutos');
+    });
+  });
+
+  // PRUEBA 5: correspondiente a US_020
+  describe('US_020: Aplicar descanso en la agenda pública', () => {
+    it('Debe calcular el próximo turno sumando el tiempo de descanso activo', () => {
+      const result = calculateNextAvailableSlot('10:30', 15);
+      expect(result).toBe('10:45');
+    });
+
+    it('Debe calcular el próximo turno consecutivo si el descanso es cero', () => {
+      const result = calculateNextAvailableSlot('10:30', 0);
+      expect(result).toBe('10:30');
     });
   });
 
