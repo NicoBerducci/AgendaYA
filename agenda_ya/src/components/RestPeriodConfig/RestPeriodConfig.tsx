@@ -2,8 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { getRestPeriod, saveRestPeriod } from '../../services/restPeriodService';
+import { LIGHT } from '../ui/theme';
+import { Boton } from '../ui/Boton';
+import { Modal } from '../ui/Modal';
+import { Aviso } from '../ui/Aviso';
 
-export const RestPeriodConfig: React.FC = () => {
+interface RestPeriodConfigProps {
+  theme?: any;
+}
+
+export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => {
+  const T = theme || LIGHT; 
+
   const [isOpen, setIsOpen] = useState(false);
   const [minutesInput, setMinutesInput] = useState<string>('0');
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
@@ -46,28 +56,23 @@ export const RestPeriodConfig: React.FC = () => {
   };
 
   return (
-    <div className="p-4 border rounded shadow-sm bg-white dark:bg-zinc-900">
-      <button
-        onClick={handleOpenModal}
-        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
-      >
+    <div style={{ padding: 16, border: `1px solid ${T.line}`, borderRadius: 8, background: T.surface, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+      <Boton T={T} onClick={handleOpenModal} tone="neutral">
         Configurar descansos entre reservas
-      </button>
+      </Boton>
 
-      {isOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Configurar descanso entre reservas"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-        >
-          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full shadow-lg relative">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Ingrese el intervalo de descanso en minutos que desea:
-            </h2>
-
-            <div className="mb-4">
-              <label htmlFor="rest-period-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+      <Modal
+        T={T}
+        open={isOpen}
+        titulo="Ingrese el intervalo de descanso en minutos que desea:"
+        textoSi="Guardar"
+        textoNo="Cerrar"
+        onSi={handleSave}
+        onNo={handleCloseModal}
+        cuerpo={
+          <div>
+            <div style={{ marginBottom: 16 }}>
+              <label htmlFor="rest-period-input" style={{ display: 'block', fontSize: 13.5, fontWeight: 600, color: T.text, marginBottom: 4 }}>
                 Minutos de descanso
               </label>
               <input
@@ -76,41 +81,21 @@ export const RestPeriodConfig: React.FC = () => {
                 value={minutesInput}
                 onChange={(e) => setMinutesInput(e.target.value)}
                 disabled={loading}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-700 dark:text-white dark:border-zinc-600"
+                style={{
+                  width: '100%', boxSizing: 'border-box', padding: '8px 10px', fontSize: 14,
+                  border: `1px solid ${T.lineStrong}`, borderRadius: 6,
+                  background: T.surface, color: T.text,
+                }}
               />
             </div>
-
-            {feedbackMessage && (
-              <div
-                role="alert"
-                className={`p-3 rounded-md mb-4 text-sm font-medium ${
-                  isSuccess
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-                    : 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
-                }`}
-              >
-                {feedbackMessage}
-              </div>
-            )}
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={handleCloseModal}
-                className="px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-200 dark:border-zinc-600 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700"
-              >
-                Cerrar
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={loading}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-              >
-                Guardar
-              </button>
-            </div>
+            <Aviso
+              T={T}
+              texto={feedbackMessage || undefined}
+              tipo={isSuccess ? "ok" : "err"}
+            />
           </div>
-        </div>
-      )}
+        }
+      />
     </div>
   );
 };
