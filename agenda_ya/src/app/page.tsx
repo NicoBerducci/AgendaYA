@@ -7,6 +7,7 @@ import { BlockDayConfig } from '@/components/BlockDayConfig/BlockDayConfig';
 import { IntervalManagement } from '@/components/IntervalManagement/IntervalManagement';
 import { ReservationLimitConfig } from '@/components/ReservationLimitConfig/ReservationLimitConfig';
 import { WorkDayConfig } from '@/components/WorkDayConfig/WorkDayConfig';
+import { PublicBookingSection } from '@/components/PublicBooking/PublicBookingSection';
 
 export default function Home() {
   const [oscuro, setOscuro] = useState(false);
@@ -108,6 +109,7 @@ export default function Home() {
               { id: 'CP_006', label: 'CP_006 - Intervalos' },
               { id: 'CP_007_008', label: 'CP_007_008 - Descansos' },
               { id: 'CP_009_010', label: 'CP_009_010 - Límite reservas' },
+              { id: 'CP_011_012', label: 'CP_011_012 - Reserva pública (Mobile)' },
               { id: 'public', label: 'Agenda pública' }
             ].map(tab => (
               <button 
@@ -136,6 +138,7 @@ export default function Home() {
             {activeTab === 'CP_006' && <IntervalManagement theme={T} />}
             {activeTab === 'CP_007_008' && <RestPeriodConfig theme={T} />}
             {activeTab === 'CP_009_010' && <ReservationLimitConfig theme={T} />}
+            {activeTab === 'CP_011_012' && <PublicBookingSection targetDateStr="2026-09-02" theme={T} />}
             {activeTab === 'public' && (
                <div style={{ padding: 24, background: T.surface, borderRadius: 8, border: `1px solid ${T.line}` }}>
                  <h2 style={{ fontSize: 24, color: T.text, margin: '0 0 16px 0' }}>Agenda Pública</h2>
