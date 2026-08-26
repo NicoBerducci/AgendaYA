@@ -49,7 +49,15 @@ const defaultState: ScheduleState = {
       activeReservations: 0,
     },
   ],
-  blockedDays: {},
+  blockedDays: {
+    // Día de prueba inyectado para simular reservas activas y testear el error de bloqueo
+    '2026-09-02': {
+      date: '2026-09-02',
+      status: 'Disponible',
+      activeReservations: 5,
+      isPublicSelectable: true,
+    }
+  },
   reservations: [
     { id: 101, intervalId: 1, fecha: 'F+7', estado: 'confirmada' },
     { id: 102, intervalId: 1, fecha: 'F+14', estado: 'confirmada' },

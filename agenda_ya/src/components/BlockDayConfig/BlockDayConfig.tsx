@@ -7,6 +7,7 @@ import { Boton } from '../ui/Boton';
 import { Modal } from '../ui/Modal';
 import { Aviso } from '../ui/Aviso';
 import { Casilla } from '../ui/Casilla';
+import { AlertModal } from '../ui/AlertModal';
 
 interface BlockDayConfigProps {
   targetDateStr?: string;
@@ -60,7 +61,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
   const [reasonInput, setReasonInput] = useState<string>('');
   const [sidePanelList, setSidePanelList] = useState<{ date: string; reason: string }[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const [alertState, setAlertState] = useState<{ open: boolean; tipo: 'ok' | 'err' | 'warn'; texto: string; actionType?: string } | null>(null);
   const [internalDayStatus, setInternalDayStatus] = useState<DayItem | null>(null);
   const [publicDayStatus, setPublicDayStatus] = useState<DayItem | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -114,15 +115,38 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
     const result = await blockDay(firstItem.date, true, new Date(), firstItem.reason);
 
     if (result.isValid && result.day) {
-      setFeedbackMessage(result.successMessage || `Los siguientes días fueron bloqueados exitosamente: ${firstItem.date}`);
+      setAlertState({
+        open: true,
+        tipo: 'ok',
+        texto: result.successMessage || `Los siguientes días fueron bloqueados exitosamente: ${firstItem.date}`,
+        actionType: 'bloqueo_ok'
+      });
       setSidePanelList([]);
       setSelectedDate(null);
       setReasonInput('');
       await fetchDayData();
     } else {
-      setFeedbackMessage(result.errorMessage || 'Error al bloquear la fecha');
+      setAlertState({
+        open: true,
+        tipo: 'err',
+        texto: result.errorMessage || 'Error al bloquear la fecha',
+        actionType: 'reservas_activas'
+      });
     }
     setLoading(false);
+  };
+
+  const handleAttemptChangeMode = (newMode: string) => {
+    if (sidePanelList.length > 0) {
+      setAlertState({
+        open: true,
+        tipo: 'warn',
+        texto: 'Tiene cambios sin guardar. ¿Desea descartar los cambios y cambiar de modo?',
+        actionType: 'unsaved_mode_change'
+      });
+    } else {
+      setEditMode(newMode);
+    }
   };
 
   const navBtn = {
@@ -159,7 +183,9 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
           {["Bloqueo", "Desbloqueo"].map((m) => (
             <button
               key={m}
-              onClick={() => setEditMode(m)}
+              onClick={() => {
+                if (editMode !== m) handleAttemptChangeMode(m);
+              }}
               style={{
                 background: editMode === m ? T.sideActive : "transparent",
                 border: editMode === m ? `1px solid ${T.mark}` : "1px solid transparent",
@@ -268,11 +294,43 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
         </div>
       </div>
 
+      {alertState?.open && (
+        <div style={{ position: 'fixed', zIndex: 10000 }}>
+          <AlertModal
+            T={T}
+            open={alertState.open}
+            tipo={alertState.tipo}
+            texto={alertState.texto}
+            onClose={() => setAlertState(null)}
+            botones={
+              alertState.actionType === 'reservas_activas' ? (
+                <>
+                  <button onClick={() => setAlertState(null)} style={{ background: '#EF4444', color: '#fff', border: '1px solid #7F1D1D', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>Cancelar operación</button>
+                  <button onClick={() => setAlertState(null)} style={{ background: '#A7F3D0', color: '#064E3B', border: '1px solid #059669', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>Reagendar Reservas</button>
+                </>
+              ) : alertState.actionType === 'unsaved_mode_change' ? (
+                <>
+                  <button onClick={() => setAlertState(null)} style={{ background: '#fff', color: '#333', border: '1px solid #ccc', padding: '6px 20px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>NO</button>
+                  <button onClick={() => {
+                    setAlertState(null);
+                    setSidePanelList([]);
+                    setEditMode(editMode === 'Bloqueo' ? 'Desbloqueo' : 'Bloqueo');
+                  }} style={{ background: '#fff', color: '#333', border: '1px solid #ccc', padding: '6px 20px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>SI</button>
+                </>
+              ) : null
+            }
+          />
+        </div>
+      )}
+
+      {/* Solo mostramos Aviso si es fallback, aunque ahora usamos AlertModal para todo esto */}
+      {/* 
       {feedbackMessage && (
         <div style={{ marginTop: 16 }}>
            <Aviso T={T} tipo="ok" texto={feedbackMessage} onClose={() => setFeedbackMessage(null)} />
         </div>
       )}
+      */}
 
       {internalDayStatus && (
         <div style={{ marginTop: 16, padding: 12, border: `1px solid ${T.line}`, borderRadius: 6, background: T.surface, fontSize: 14 }}>
