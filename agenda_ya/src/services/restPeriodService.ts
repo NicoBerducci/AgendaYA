@@ -28,7 +28,7 @@ export const saveRestPeriod = async (minutes: number | string): Promise<RestPeri
   return new Promise((resolve) => {
     setTimeout(() => {
       const validationResult = configureRestPeriod(minutes);
-      if (validationResult.isValid) {
+      if (validationResult.isValid && validationResult.valor !== undefined) {
         inMemoryRestPeriod = validationResult.valor;
       }
       resolve(validationResult);
