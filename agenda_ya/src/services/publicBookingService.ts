@@ -20,7 +20,9 @@ export interface PublicBookingState {
 
 export const LOCK_DURATION_MS = 10 * 60 * 1000; // 10 minutos (US_028)
 
-const HORARIOS = ['10:00', '10:30', '11:00', '11:30'];
+export const MORNING_SLOTS = ['10:00', '10:30', '11:00'];
+export const AFTERNOON_SLOTS = ['14:00', '14:30', '15:00'];
+const HORARIOS = [...MORNING_SLOTS, ...AFTERNOON_SLOTS];
 
 const buildDefaultState = (): PublicBookingState => ({
   date: '',

@@ -9,11 +9,74 @@ interface DesktopAccessGuardProps {
   theme?: ThemeTokens;
 }
 
+const BLOCK_MESSAGE =
+  'Este enlace está disponible únicamente desde dispositivos móviles. Por favor abrilo desde tu celular para poder realizar tu reserva';
+
+// Réplica del diálogo nativo del wireframe M04-R05F (misma paleta que AlertModal:
+// cabecera menta + ícono de error grande), pero embebida en el recuadro de la
+// demo en lugar de un overlay fijo de pantalla completa, para no taparle al
+// usuario el resto de la app admin mientras navega esta pestaña.
+function BlockDialog() {
+  return (
+    <div
+      style={{
+        width: '100%',
+        background: '#fff',
+        borderRadius: 8,
+        overflow: 'hidden',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      }}
+    >
+      <div style={{ background: '#7DD3B1', padding: '6px 12px' }}>
+        <span style={{ color: '#B91C1C', fontWeight: 'bold' }}>ⓧ</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', padding: '30px 24px', gap: 20 }}>
+        <svg
+          viewBox="0 0 24 24"
+          width="56"
+          height="56"
+          stroke="#B91C1C"
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ flexShrink: 0 }}
+        >
+          <circle cx="12" cy="12" r="10" strokeWidth="2" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+        <div style={{ fontSize: 16, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
+          {BLOCK_MESSAGE}
+        </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '0 24px 20px' }}>
+        <span
+          style={{
+            border: '1px solid #ccc',
+            borderRadius: 6,
+            padding: '6px 24px',
+            fontWeight: 600,
+            color: '#999',
+          }}
+        >
+          OK
+        </span>
+      </div>
+      <div style={{ fontSize: 11, color: '#999', textAlign: 'center', paddingBottom: 12 }}>
+        No hay forma de continuar el flujo desde esta pantalla.
+      </div>
+    </div>
+  );
+}
+
 // El requisito (M04-R05F / US_027) exige que la detección se base ÚNICAMENTE en la
 // cabecera HTTP User-Agent. En esta demo, como no hay un backend real que la
 // intercepte, la simulamos con un selector explícito que hace las veces de esa
 // cabecera. El checkbox de "ventana angosta" está para demostrar el punto 4 del
-// CP_012: el ancho de pantalla NO debe influir en el bloqueo.
+// CP_012: el ancho de pantalla NO debe influir en el bloqueo. La pantalla de
+// bloqueo (BlockDialog) no tiene botón funcional para cerrarla: no existe forma
+// de evadirla desde un entorno Desktop.
 export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme }) => {
   const T = theme || LIGHT;
   const [userAgent, setUserAgent] = useState<DeviceType>('desktop');
@@ -76,32 +139,19 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
           border: `1px solid ${T.lineStrong}`,
           borderRadius: 16,
           background: T.surface,
-          overflow: 'hidden',
+          minHeight: 220,
+          padding: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+          alignItems: isBlocked ? 'center' : 'stretch',
+          justifyContent: isBlocked ? 'center' : 'flex-start',
         }}
       >
-        {isBlocked ? (
-          <div
-            role="alert"
-            style={{
-              padding: 32,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 12,
-              textAlign: 'center',
-            }}
-          >
-            <div style={{ fontSize: 40 }}>🚫</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: T.text }}>
-              Para realizar una reserva, ingrese desde un dispositivo móvil
-            </div>
-            <div style={{ fontSize: 11.5, color: T.muted }}>
-              No se generó sesión temporal ni bloqueo de turno. El selector de tipo de evento no es
-              alcanzable desde esta pantalla.
-            </div>
-          </div>
-        ) : (
-          <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {isBlocked && <BlockDialog />}
+
+        {!isBlocked && (
+          <>
             <div style={{ fontSize: 13, fontWeight: 700, color: T.text }}>Seleccioná el tipo de evento</div>
             <select
               value={eventType}
@@ -122,7 +172,7 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
             <div style={{ fontSize: 11.5, color: T.muted }}>
               Acceso permitido: el flujo público continúa con normalidad en dispositivos móviles.
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
