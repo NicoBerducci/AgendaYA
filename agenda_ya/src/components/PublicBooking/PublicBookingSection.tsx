@@ -8,22 +8,27 @@ import { DesktopAccessGuard } from './DesktopAccessGuard';
 interface PublicBookingSectionProps {
   targetDateStr?: string;
   theme?: ThemeTokens;
+  initialSubTab?: 'CP_011' | 'CP_012' | 'CP_013_014';
 }
 
-// Agrupa los dos casos de prueba de Gracia Ignacio (Módulo 4 - Reserva Pública)
-// en una misma pestaña del panel de administración, ya que ambos pertenecen a la
-// interfaz mobile del Usuario Invitado y no a la de configuración del Administrador.
-export const PublicBookingSection: React.FC<PublicBookingSectionProps> = ({ targetDateStr, theme }) => {
+// Agrupa los casos de prueba del Módulo 4 (Reserva Pública - Mobile)
+// CP_011 / CP_012 (Gracia Ignacio) y CP_013 / CP_014 (Tomás Yanardi)
+export const PublicBookingSection: React.FC<PublicBookingSectionProps> = ({
+  targetDateStr,
+  theme,
+  initialSubTab = 'CP_013_014',
+}) => {
   const T = theme || LIGHT;
-  const [subTab, setSubTab] = useState<'CP_011' | 'CP_012'>('CP_011');
+  const [subTab, setSubTab] = useState<'CP_011' | 'CP_012' | 'CP_013_014'>(initialSubTab);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: FONT }}>
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {(
           [
-            { id: 'CP_011', label: 'CP_011 · Bloqueo temporal' },
-            { id: 'CP_012', label: 'CP_012 · Acceso desde Desktop' },
+            { id: 'CP_013_014', label: 'CP_013_014 · Confirmación y Vencimiento (Tomás Yanardi)' },
+            { id: 'CP_011', label: 'CP_011 · Bloqueo temporal (Ignacio Gracia)' },
+            { id: 'CP_012', label: 'CP_012 · Acceso Desktop (Ignacio Gracia)' },
           ] as const
         ).map((tab) => (
           <button
@@ -46,10 +51,10 @@ export const PublicBookingSection: React.FC<PublicBookingSectionProps> = ({ targ
         ))}
       </div>
 
-      {subTab === 'CP_011' ? (
-        <PublicBookingDemo targetDateStr={targetDateStr} theme={T} />
-      ) : (
+      {subTab === 'CP_012' ? (
         <DesktopAccessGuard theme={T} />
+      ) : (
+        <PublicBookingDemo targetDateStr={targetDateStr} theme={T} />
       )}
     </div>
   );
