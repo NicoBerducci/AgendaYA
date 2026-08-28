@@ -7,6 +7,7 @@ export interface IntervalItem {
   turno: string;
   horario: string;
   activeReservations: number;
+  enabled?: boolean;
 }
 
 export interface ReservationItem {
@@ -40,6 +41,7 @@ const defaultState: ScheduleState = {
       turno: 'Turno 1',
       horario: '08:00 a 12:00',
       activeReservations: 3,
+      enabled: true,
     },
     {
       id: 2,
@@ -47,6 +49,23 @@ const defaultState: ScheduleState = {
       turno: 'Turno 1',
       horario: '08:00 a 12:00',
       activeReservations: 0,
+      enabled: false,
+    },
+    {
+      id: 3,
+      dia: 'Miércoles',
+      turno: 'Turno 1',
+      horario: '08:00 a 12:00',
+      activeReservations: 0,
+      enabled: true,
+    },
+    {
+      id: 4,
+      dia: 'Miércoles',
+      turno: 'Turno 2',
+      horario: '14:00 a 18:00',
+      activeReservations: 0,
+      enabled: true,
     },
   ],
   blockedDays: {
@@ -155,6 +174,30 @@ export const getIntervals = async (): Promise<IntervalItem[]> => {
 };
 
 /**
+ * Obtiene los días laborales configurados.
+ */
+export const getWorkDays = async (): Promise<string[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([...currentState.workDays]);
+    }, 5);
+  });
+};
+
+/**
+ * Guarda los días y los intervalos desde la pantalla de configuración.
+ */
+export const saveWorkDaysAndIntervals = async (workDays: string[], intervals: IntervalItem[]): Promise<boolean> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      currentState.workDays = [...workDays];
+      currentState.intervals = [...intervals];
+      resolve(true);
+    }, 5);
+  });
+};
+
+/**
  * Elimina un intervalo si no tiene reservas activas.
  * Si tiene reservas activas, rechaza y retorna mensaje interpolado exacto.
  */
@@ -203,6 +246,56 @@ export const getReservations = async (): Promise<ReservationItem[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([...currentState.reservations]);
+    }, 5);
+  });
+};
+
+/**
+ * Habilita o deshabilita un intervalo temporalmente.
+ */
+export const toggleIntervalStatus = async (
+  intervalId: number,
+  enabled: boolean
+): Promise<{ isValid: boolean; errorMessage?: string; successMessage?: string; intervals: IntervalItem[] }> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const intervalIndex = currentState.intervals.findIndex((i) => i.id === intervalId);
+      if (intervalIndex === -1) {
+        resolve({ isValid: false, errorMessage: 'Intervalo no encontrado', intervals: currentState.intervals });
+        return;
+      }
+
+      const interval = currentState.intervals[intervalIndex];
+
+      // Si se intenta deshabilitar, verificar que no sea el último activo del día (M02-R03F)
+      if (!enabled) {
+        const activosDelDia = currentState.intervals.filter(
+          (i) => i.dia === interval.dia && i.enabled !== false
+        );
+        if (activosDelDia.length <= 1) {
+          resolve({
+            isValid: false,
+            errorMessage: 'No se puede deshabilitar el único intervalo activo del día',
+            intervals: [...currentState.intervals],
+          });
+          return;
+        }
+      }
+
+      // Aplicar el cambio de forma inmutable
+      const updatedInterval = { ...interval, enabled };
+      currentState.intervals = [
+        ...currentState.intervals.slice(0, intervalIndex),
+        updatedInterval,
+        ...currentState.intervals.slice(intervalIndex + 1),
+      ];
+
+      const accion = enabled ? 'habilitó' : 'deshabilitó';
+      resolve({
+        isValid: true,
+        successMessage: `Se ${accion} el intervalo del turno ${interval.turno} del día ${interval.dia} exitosamente`,
+        intervals: [...currentState.intervals],
+      });
     }, 5);
   });
 };

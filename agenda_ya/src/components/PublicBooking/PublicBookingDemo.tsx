@@ -11,6 +11,7 @@ import {
   selectSlot,
   Slot,
 } from '../../services/publicBookingService';
+import { getIntervals, IntervalItem } from '../../services/scheduleService';
 import { LIGHT, FONT, ThemeTokens } from '../ui/theme';
 import { Boton } from '../ui/Boton';
 
@@ -115,14 +116,50 @@ function DevicePanel({
   const [lockedTime, setLockedTime] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [, forceTick] = useState(0);
+  const [activeIntervals, setActiveIntervals] = useState<IntervalItem[]>([]);
 
   useEffect(() => {
+    const fetchInt = async () => {
+      const ints = await getIntervals();
+      setActiveIntervals(ints);
+    };
+    fetchInt();
+
     const id = setInterval(() => {
       setSlots(getSlots());
+      fetchInt();
       forceTick((n) => n + 1); // refresca el contador regresivo cada tick
     }, POLL_MS);
     return () => clearInterval(id);
   }, []);
+
+  const getDayName = (dateStr: string) => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dateObj = new Date(y, m - 1, d);
+    const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    return dias[dateObj.getDay()];
+  };
+
+  const dayName = getDayName(date);
+
+  const isTimeInEnabledInterval = (time: string) => {
+    const dayIntervals = activeIntervals.filter(i => i.dia === dayName);
+    if (dayIntervals.length === 0) return true; // fallback
+    
+    const [h, m] = time.split(':').map(Number);
+    const tTotal = h * 60 + m;
+
+    return dayIntervals.some(int => {
+      if (int.enabled === false) return false;
+      const [start, end] = int.horario.split(' a ');
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+      return tTotal >= (sh * 60 + sm) && tTotal < (eh * 60 + em);
+    });
+  };
+
+  const visibleMorning = MORNING_SLOTS.filter(isTimeInEnabledInterval);
+  const visibleAfternoon = AFTERNOON_SLOTS.filter(isTimeInEnabledInterval);
 
   const statusOf = (time: string): 'disponible' | 'seleccionado' | 'no-disponible' => {
     if (time === pendingTime || time === lockedTime) return 'seleccionado';
@@ -190,16 +227,16 @@ function DevicePanel({
               </div>
             </div>
 
-            <div style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}>MAÑANA</div>
+            {visibleMorning.length > 0 && <div style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}>MAÑANA</div>}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              {MORNING_SLOTS.map((time) => (
+              {visibleMorning.map((time) => (
                 <SlotButton key={time} time={time} state={statusOf(time)} onClick={() => handlePickLocal(time)} />
               ))}
             </div>
 
-            <div style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}>TARDE</div>
+            {visibleAfternoon.length > 0 && <div style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}>TARDE</div>}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              {AFTERNOON_SLOTS.map((time) => (
+              {visibleAfternoon.map((time) => (
                 <SlotButton key={time} time={time} state={statusOf(time)} onClick={() => handlePickLocal(time)} />
               ))}
             </div>

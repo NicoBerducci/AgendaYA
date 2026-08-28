@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { LIGHT, DARK, FONT } from '@/components/ui/theme';
 import { RestPeriodConfig } from '@/components/RestPeriodConfig/RestPeriodConfig';
 import { BlockDayConfig } from '@/components/BlockDayConfig/BlockDayConfig';
-import { IntervalManagement } from '@/components/IntervalManagement/IntervalManagement';
 import { ReservationLimitConfig } from '@/components/ReservationLimitConfig/ReservationLimitConfig';
 import { WorkDayConfig } from '@/components/WorkDayConfig/WorkDayConfig';
 import { PublicBookingSection } from '@/components/PublicBooking/PublicBookingSection';
@@ -104,9 +103,8 @@ export default function Home() {
           
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24, borderBottom: `1px solid ${T.line}`, paddingBottom: 16 }}>
             {[
-              { id: 'CP_001_002', label: 'CP_001_002 - Jornada' },
+              { id: 'CP_001_002', label: 'CP_001_002_003_004 - Jornada' },
               { id: 'CP_005', label: 'CP_005 - Bloqueo de días' },
-              { id: 'CP_006', label: 'CP_006 - Intervalos' },
               { id: 'CP_007_008', label: 'CP_007_008 - Descansos' },
               { id: 'CP_009_010', label: 'CP_009_010 - Límite reservas' },
               { id: 'CP_011_012', label: 'CP_011_012 - Reserva pública (Mobile)' },
@@ -135,7 +133,6 @@ export default function Home() {
           <div style={{ maxWidth: 1000 }}>
             {activeTab === 'CP_001_002' && <WorkDayConfig theme={T} />}
             {activeTab === 'CP_005' && <BlockDayConfig targetDateStr="2026-09-01" theme={T} />}
-            {activeTab === 'CP_006' && <IntervalManagement theme={T} />}
             {activeTab === 'CP_007_008' && <RestPeriodConfig theme={T} />}
             {activeTab === 'CP_009_010' && <ReservationLimitConfig theme={T} />}
             {activeTab === 'CP_011_012' && <PublicBookingSection targetDateStr="2026-09-02" theme={T} />}
