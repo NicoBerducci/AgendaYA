@@ -61,6 +61,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
               </label>
               <select
                 disabled
+                defaultValue=""
                 style={{
                   width: '100%',
                   padding: '12px 16px',
@@ -73,7 +74,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
                   outline: 'none',
                 }}
               >
-                <option value="" disabled selected>Seleccione el tipo de evento</option>
+                <option value="" disabled>Seleccione el tipo de evento</option>
               </select>
             </div>
 
