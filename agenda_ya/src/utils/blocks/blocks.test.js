@@ -9,6 +9,19 @@ import {
     getBlockedDayViewStatus,
 } from './blocks';
 
+// Calcula una fecha ISO (YYYY-MM-DD) a partir de hoy + un offset de días,
+// usando componentes de fecha local (mismo criterio que blockDayWithoutReservations,
+// que compara contra new Date(anio, mes, dia) en hora local). Así las fechas
+// nunca quedan hardcodeadas ni caducan con el paso del tiempo.
+function fechaISORelativaAHoy(diasDeOffset) {
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + diasDeOffset);
+    const anio = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${anio}-${mes}-${dia}`;
+}
+
 describe('Épica: Mantenimiento de Intervalos y Bloqueos', () => {
 
     // Prueba 1: Basada en US_011 (Eliminar intervalo sin reservas asociadas)
@@ -197,6 +210,79 @@ describe('Épica: Mantenimiento de Intervalos y Bloqueos', () => {
             const day = { date: '2026-06-25', status: 'Bloqueado' };
             const result = getBlockedDayViewStatus(day, currentDate);
             expect(result.isInteractable).toBe(true);
+        });
+    });
+
+    // Prueba 9: US_013 con fechas calculadas en runtime (Espejo Adriel)
+    describe('US_013 (runtime): Bloquear un día sin reservas previas - fechas dinámicas', () => {
+        it('Debe bloquear exitosamente una fecha futura sin reservas activas cuando el administrador confirma', () => {
+            const day = {
+                date: fechaISORelativaAHoy(7),
+                status: 'Disponible',
+                activeReservations: 0,
+            };
+
+            const result = blockDayWithoutReservations(day, new Date(), true);
+
+            expect(result.isValid).toBe(true);
+            expect(result.day.status).toBe('Bloqueado');
+            expect(result.day.isPublicSelectable).toBe(false);
+        });
+
+        it('Debe permitir bloquear el día de hoy (caso borde: el límite no cuenta como fecha pasada)', () => {
+            const day = {
+                date: fechaISORelativaAHoy(0),
+                status: 'Disponible',
+                activeReservations: 0,
+            };
+
+            const result = blockDayWithoutReservations(day, new Date(), true);
+
+            expect(result.isValid).toBe(true);
+            expect(result.errorMessage).toBeUndefined();
+            expect(result.day.status).toBe('Bloqueado');
+        });
+
+        it('Debe devolver el error exacto si se intenta bloquear una fecha pasada', () => {
+            const day = {
+                date: fechaISORelativaAHoy(-1),
+                status: 'Disponible',
+                activeReservations: 0,
+            };
+
+            const result = blockDayWithoutReservations(day, new Date(), true);
+
+            expect(result.isValid).toBe(false);
+            expect(result.errorMessage).toBe('No se pueden bloquear fechas pasadas');
+        });
+    });
+
+    // Prueba 10: US_015 con fechas calculadas en runtime (Espejo Adriel)
+    describe('US_015 (runtime): Advertir reservas existentes al bloquear un día - fechas dinámicas', () => {
+        it('Debe advertir con el mensaje exacto si el día seleccionado tiene reservas activas', () => {
+            const fechaFutura = fechaISORelativaAHoy(7);
+            const selectedDays = [
+                { date: fechaFutura, activeReservations: 4 },
+            ];
+
+            const result = validateReservationsBeforeBlocking(selectedDays);
+
+            expect(result.isValid).toBe(false);
+            expect(result.errorMessage).toBe(
+                `Los siguientes días seleccionados tienen reservas activas: ${fechaFutura}`
+            );
+            expect(result.totalReservations).toBe(4);
+        });
+
+        it('Debe permitir el bloqueo si el día tiene cero reservas activas (caso borde)', () => {
+            const selectedDays = [
+                { date: fechaISORelativaAHoy(7), activeReservations: 0 },
+            ];
+
+            const result = validateReservationsBeforeBlocking(selectedDays);
+
+            expect(result.isValid).toBe(true);
+            expect(result.errorMessage).toBeUndefined();
         });
     });
 
