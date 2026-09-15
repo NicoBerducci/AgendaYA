@@ -8,10 +8,17 @@ import { ReservationLimitConfig } from '@/components/ReservationLimitConfig/Rese
 import { WorkDayConfig } from '@/components/WorkDayConfig/WorkDayConfig';
 import { PublicBookingSection } from '@/components/PublicBooking/PublicBookingSection';
 
+function getFechaFuturaISO(diasEnElFuturo: number): string {
+  const fecha = new Date();
+  fecha.setDate(fecha.getDate() + diasEnElFuturo);
+  return fecha.toISOString().split('T')[0];
+}
+
 export default function Home() {
   const [oscuro, setOscuro] = useState(false);
   const [activeTab, setActiveTab] = useState('CP_001_002');
-  
+  const [blockDayTargetDate] = useState(() => getFechaFuturaISO(7));
+
   const T = oscuro ? DARK : LIGHT;
 
   const handleTabChange = (tab: string) => {
@@ -133,7 +140,7 @@ export default function Home() {
 
           <div style={{ maxWidth: 1000 }}>
             {activeTab === 'CP_001_002' && <WorkDayConfig theme={T} />}
-            {activeTab === 'CP_005' && <BlockDayConfig targetDateStr="2026-09-01" theme={T} />}
+            {activeTab === 'CP_005' && <BlockDayConfig targetDateStr={blockDayTargetDate} theme={T} />}
             {activeTab === 'CP_007_008' && <RestPeriodConfig theme={T} />}
             {activeTab === 'CP_009_010' && <ReservationLimitConfig theme={T} />}
             {activeTab === 'CP_011_012' && <PublicBookingSection targetDateStr="2026-09-02" theme={T} initialSubTab="CP_011" />}
