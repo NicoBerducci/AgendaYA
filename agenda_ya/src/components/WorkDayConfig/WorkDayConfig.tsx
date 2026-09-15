@@ -258,7 +258,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
 
       // Preparar array para guardar (incluyendo deshabilitados que no superponen obviamente o sí superponen pero están deshabilitados)
       schedule[day].intervals.forEach((int) => {
-        let finalInt = { ...int };
+        const finalInt = { ...int };
         if (!finalInt.id) {
           currentMaxId++;
           finalInt.id = currentMaxId;
