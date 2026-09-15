@@ -1,4 +1,3 @@
-// @ts-expect-error El modulo blocks.js es JavaScript sin tipos
 import { blockDayWithoutReservations, deleteIntervalWithoutReservations } from '../utils/blocks/blocks';
 
 export interface IntervalItem {

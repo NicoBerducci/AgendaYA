@@ -1,4 +1,3 @@
-// @ts-expect-error El modulo blocks.js es JavaScript sin tipos
 import { validarLimiteDiario } from '../utils/Rules/reglasDisponibilidad';
 
 export interface ReservationLimitResponse {
