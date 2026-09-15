@@ -118,8 +118,9 @@ export default function Home() {
               { id: 'CP_013_014', label: 'CP_013_014 - Confirmación de reserva' },
               { id: 'public', label: 'Agenda pública' }
             ].map(tab => (
-              <button 
+              <button
                 key={tab.id}
+                data-cy={`tab-${tab.id}`}
                 onClick={() => handleTabChange(tab.id)}
                 style={{
                   background: activeTab === tab.id ? T.sideActive : 'transparent',
