@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error El modulo blocks.js es JavaScript sin tipos
 import { configureRestPeriod } from '../utils/Rules/reglasDisponibilidad';
 
 let inMemoryRestPeriod = 0;

@@ -5,7 +5,14 @@ import { resetScheduleState } from '../../services/scheduleService';
 
 describe('US_013 — CP_005: Bloquear un día sin reservas previas (Espejo Adriel)', () => {
 
-  const testDateStr = '2026-09-01'; // Fecha F + 7 para el test
+  // F+7 calculado en tiempo de ejecución: el test no caduca cuando pasa la fecha
+  const fPlus7 = new Date();
+  fPlus7.setDate(fPlus7.getDate() + 7);
+  const testDateStr = [
+    fPlus7.getFullYear(),
+    String(fPlus7.getMonth() + 1).padStart(2, '0'),
+    String(fPlus7.getDate()).padStart(2, '0'),
+  ].join('-');
 
   beforeEach(() => {
     // Prerrequisito: Fecha en estado "Disponible", sin reservas activas
