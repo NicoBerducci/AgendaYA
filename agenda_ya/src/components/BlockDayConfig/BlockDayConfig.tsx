@@ -46,7 +46,7 @@ function fmtLargo(d: Date) {
 
 export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, theme }) => {
   const T = theme || LIGHT;
-  
+
   const getFPlus7Date = (): string => {
     if (targetDateStr) return targetDateStr;
     const now = new Date();
@@ -159,7 +159,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
     <div style={{ display: 'none' }}>
       <span>Jornada Laboral Cargada: Lunes a Viernes (08:00 a 16:00)</span>
       <label htmlFor="mode-selector">Modo de edición:</label>
-      <select id="mode-selector" value={editMode} onChange={e => setEditMode(e.target.value)}>
+      <select id="mode-selector" data-cy="mode-selector" value={editMode} onChange={e => setEditMode(e.target.value)}>
         <option value="Lectura">Lectura</option>
         <option value="Bloqueo">Bloqueo</option>
       </select>
@@ -169,7 +169,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: '0', background: T.surface, fontFamily: FONT }}>
       {testA11yHidden}
-      
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 34, fontWeight: 400, color: T.text, letterSpacing: -0.4 }}>
@@ -183,6 +183,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
           {["Bloqueo", "Desbloqueo"].map((m) => (
             <button
               key={m}
+              data-cy={`modo-${m.toLowerCase()}`}
               onClick={() => {
                 if (editMode !== m) handleAttemptChangeMode(m);
               }}
@@ -201,9 +202,9 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
       </div>
 
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 6, margin: "10px 0 8px" }}>
-        <button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
+        <button data-cy="mes-anterior" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
           style={navBtn} aria-label="Mes anterior">‹</button>
-        <button onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
+        <button data-cy="mes-siguiente" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
           style={navBtn} aria-label="Mes siguiente">›</button>
       </div>
 
@@ -236,11 +237,12 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
                   </div>
                   <div style={{ position: "absolute", right: 8, bottom: 8, display: "flex", gap: 6, alignItems: "center" }}>
                     {delMes && (
-                      <Casilla 
-                        T={T} 
-                        marcada={marcada} 
+                      <Casilla
+                        T={T}
+                        marcada={marcada}
                         disabled={editMode !== 'Bloqueo'}
                         onClick={() => toggle(k)}
+                        data-cy={`dia-${k}`}
                         aria-label={esTestDate ? `Fecha F+7 (${defaultDate})` : undefined}
                       />
                     )}
@@ -252,22 +254,22 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
         </div>
 
         {/* Panel lateral */}
-        <div aria-label="Panel lateral" style={{ background: T.panel, border: `1px solid ${T.lineStrong}`, borderRadius: 10, padding: 12, minHeight: 420, display: "flex", flexDirection: "column" }}>
+        <div aria-label="Panel lateral" data-cy="panel-lateral" style={{ background: T.panel, border: `1px solid ${T.lineStrong}`, borderRadius: 10, padding: 12, minHeight: 420, display: "flex", flexDirection: "column" }}>
           <div style={{ textAlign: "center", fontWeight: 700, fontSize: 15, color: T.text, marginBottom: 12, lineHeight: 1.3 }}>
             Confirmar Bloqueos/Cancelaciones
           </div>
           <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 10 }}>
             {sidePanelList.length === 0 && (
               <div style={{ fontSize: 12.5, color: T.muted, textAlign: "center", padding: "28px 10px", lineHeight: 1.5 }}>
-                No hay fechas seleccionadas en el panel.<br/>
+                No hay fechas seleccionadas en el panel.<br />
                 Marcá una fecha del calendario para agregarla acá.
               </div>
             )}
             {sidePanelList.map((s) => (
               <div key={s.date} style={{ background: T.surface, borderRadius: 8, padding: 12, border: `1px solid ${T.line}` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${T.line}`, paddingBottom: 8 }}>
-                  <span style={{ fontSize: 13.5, fontWeight: 600, color: T.text }}><span className="sr-only" style={{display: 'none'}}>Fecha: </span>{s.date}</span>
-                  <button onClick={() => toggle(s.date)} aria-label="Quitar"
+                  <span style={{ fontSize: 13.5, fontWeight: 600, color: T.text }}><span className="sr-only" style={{ display: 'none' }}>Fecha: </span>{s.date}</span>
+                  <button onClick={() => toggle(s.date)} aria-label="Quitar" data-cy={`quitar-fecha-${s.date}`}
                     style={{ background: T.danger, color: "#fff", border: "none", borderRadius: "50%", width: 18, height: 18, fontSize: 12, cursor: "pointer", lineHeight: 1 }}>×</button>
                 </div>
                 <div style={{ fontSize: 11, color: T.muted, margin: "9px 0 5px" }}>
@@ -275,6 +277,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
                 </div>
                 <input
                   id="reason-input"
+                  data-cy={`input-motivo-${s.date}`}
                   value={s.reason}
                   onChange={(e) => setSidePanelList((arr) => arr.map((x) => x.date === s.date ? { ...x, reason: e.target.value } : x))}
                   placeholder="Ej: Día Feriado..."
@@ -288,8 +291,8 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
             ))}
           </div>
           <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 12 }}>
-            <Boton tone="danger" T={T} onClick={() => setSidePanelList([])} disabled={!sidePanelList.length}>Cancelar</Boton>
-            <Boton tone="neutral" T={T} onClick={handleSaveClick} disabled={!sidePanelList.length || loading}>Guardar</Boton>
+            <Boton tone="danger" T={T} data-cy="btn-cancelar" onClick={() => setSidePanelList([])} disabled={!sidePanelList.length}>Cancelar</Boton>
+            <Boton tone="neutral" T={T} data-cy="btn-guardar" onClick={handleSaveClick} disabled={!sidePanelList.length || loading}>Guardar</Boton>
           </div>
         </div>
       </div>
@@ -302,16 +305,17 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
             tipo={alertState.tipo}
             texto={alertState.texto}
             onClose={() => setAlertState(null)}
+            dataCy="alert-modal"
             botones={
               alertState.actionType === 'reservas_activas' ? (
                 <>
-                  <button onClick={() => setAlertState(null)} style={{ background: '#EF4444', color: '#fff', border: '1px solid #7F1D1D', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>Cancelar operación</button>
-                  <button onClick={() => setAlertState(null)} style={{ background: '#A7F3D0', color: '#064E3B', border: '1px solid #059669', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>Reagendar Reservas</button>
+                  <button data-cy="btn-cancelar-operacion" onClick={() => setAlertState(null)} style={{ background: '#EF4444', color: '#fff', border: '1px solid #7F1D1D', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>Cancelar operación</button>
+                  <button data-cy="btn-reagendar-reservas" onClick={() => setAlertState(null)} style={{ background: '#A7F3D0', color: '#064E3B', border: '1px solid #059669', padding: '8px 16px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>Reagendar Reservas</button>
                 </>
               ) : alertState.actionType === 'unsaved_mode_change' ? (
                 <>
-                  <button onClick={() => setAlertState(null)} style={{ background: '#fff', color: '#333', border: '1px solid #ccc', padding: '6px 20px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>NO</button>
-                  <button onClick={() => {
+                  <button data-cy="btn-cambio-modo-no" onClick={() => setAlertState(null)} style={{ background: '#fff', color: '#333', border: '1px solid #ccc', padding: '6px 20px', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>NO</button>
+                  <button data-cy="btn-cambio-modo-si" onClick={() => {
                     setAlertState(null);
                     setSidePanelList([]);
                     setEditMode(editMode === 'Bloqueo' ? 'Desbloqueo' : 'Bloqueo');
@@ -333,7 +337,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
       */}
 
       {internalDayStatus && (
-        <div style={{ marginTop: 16, padding: 12, border: `1px solid ${T.line}`, borderRadius: 6, background: T.surface, fontSize: 14 }}>
+        <div data-cy="estado-interno" style={{ marginTop: 16, padding: 12, border: `1px solid ${T.line}`, borderRadius: 6, background: T.surface, fontSize: 14 }}>
           <span style={{ fontWeight: 600, color: T.text }}>Detalle Vista Interna Admin: </span>
           <span style={{ color: T.text }}>Fecha {internalDayStatus.date} ➔ Estado: </span>
           <span style={{ fontWeight: 700, color: internalDayStatus.status === 'Bloqueado' ? T.blockedInk : T.text }}>{internalDayStatus.status}</span>
@@ -344,7 +348,7 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
         <h2 style={{ fontSize: 18, fontWeight: 700, color: T.text, margin: '0 0 8px 0', fontFamily: FONT }}>
           Vista Pública de la Agenda (Simulación Usuario Invitado)
         </h2>
-        <div style={{ padding: 16, border: `1px solid ${T.line}`, borderRadius: 6, background: T.panel, fontSize: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div data-cy="vista-publica" style={{ padding: 16, border: `1px solid ${T.line}`, borderRadius: 6, background: T.panel, fontSize: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
           <p style={{ fontWeight: 500, color: T.text, margin: 0 }}>Enlace Público de Agenda:</p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ color: T.text }}>Fecha {defaultDate}:</span>
@@ -370,6 +374,9 @@ export const BlockDayConfig: React.FC<BlockDayConfigProps> = ({ targetDateStr, t
         textoNo="NO"
         onSi={() => handleConfirmModalChoice(true)}
         onNo={() => handleConfirmModalChoice(false)}
+        dataCy="modal-confirmar-bloqueo"
+        dataCySi="modal-confirmar-bloqueo-si"
+        dataCyNo="modal-confirmar-bloqueo-no"
       />
     </div>
   );
