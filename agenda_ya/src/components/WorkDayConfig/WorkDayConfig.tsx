@@ -30,9 +30,9 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
   useEffect(() => {
     const fetchData = async () => {
       const [apiWorkDays, apiIntervals] = await Promise.all([getWorkDays(), getIntervals()]);
-      
+
       const newSchedule: Record<string, { selected: boolean; intervals: IntervalItem[] }> = {};
-      
+
       DIAS.forEach(day => {
         newSchedule[day] = {
           selected: apiWorkDays.includes(day),
@@ -43,7 +43,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
       setSchedule(newSchedule);
       setLoading(false);
     };
-    
+
     fetchData();
   }, []);
 
@@ -212,7 +212,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
   const handleGlobalSave = async () => {
     const finalIntervals: IntervalItem[] = [];
     const finalWorkDays: string[] = [];
-    
+
     // Asignamos IDs simulados a los nuevos intervalos
     let currentMaxId = 0;
     for (const day of DIAS) {
@@ -223,28 +223,28 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
 
     for (const day of DIAS) {
       if (!schedule[day].selected) continue;
-      
+
       finalWorkDays.push(day);
       const intervals = schedule[day].intervals.filter((i) => i.enabled !== false); // Solo para validar overlap
-      
+
       for (let i = 0; i < intervals.length; i++) {
         for (let j = i + 1; j < intervals.length; j++) {
           const int1 = intervals[i];
           const int2 = intervals[j];
-          
+
           const [s1Str, e1Str] = int1.horario.split(' a ');
           const [s2Str, e2Str] = int2.horario.split(' a ');
-          
+
           const [s1H, s1M] = s1Str.split(':').map(Number);
           const [e1H, e1M] = e1Str.split(':').map(Number);
           const start1 = s1H * 60 + s1M;
           const end1 = e1H * 60 + e1M;
-          
+
           const [s2H, s2M] = s2Str.split(':').map(Number);
           const [e2H, e2M] = e2Str.split(':').map(Number);
           const start2 = s2H * 60 + s2M;
           const end2 = e2H * 60 + e2M;
-          
+
           if (start1 < end2 && start2 < end1) {
             setAlertState({
               open: true,
@@ -266,7 +266,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
         finalIntervals.push(finalInt);
       });
     }
-    
+
     await saveWorkDaysAndIntervals(finalWorkDays, finalIntervals);
     setAlertState({
       open: true,

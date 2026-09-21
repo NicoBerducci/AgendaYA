@@ -204,6 +204,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
             </label>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               <input
+                data-cy="daily-limit-input"
                 type="number"
                 placeholder="Ej: 02"
                 value={limitInput}
@@ -248,6 +249,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
               open={true}
               tipo={isSuccess ? 'ok' : 'err'}
               texto={feedbackMessage}
+              dataCy={isSuccess ? 'success-message' : 'error-message'}
               onClose={() => setFeedbackMessage(null)}
               botones={
                 !isSuccess ? (
@@ -292,6 +294,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
             Cancelar
           </button>
           <button
+            data-cy="save-daily-limit-button"
             onClick={handleSave}
             disabled={loading}
             style={{
