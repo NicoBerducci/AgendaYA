@@ -141,18 +141,26 @@ function DevicePanel({
   const [activeIntervals, setActiveIntervals] = useState<IntervalItem[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchInt = async () => {
       const ints = await getIntervals();
-      setActiveIntervals(ints);
+      if (isMounted) {
+        setActiveIntervals(ints);
+      }
     };
     fetchInt();
 
     const id = setInterval(() => {
-      setSlots(getSlots());
-      fetchInt();
-      forceTick((n) => n + 1); // refresca el contador regresivo cada tick
+      if (isMounted) {
+        setSlots(getSlots());
+        fetchInt();
+        forceTick((n) => n + 1); // refresca el contador regresivo cada tick
+      }
     }, POLL_MS);
-    return () => clearInterval(id);
+    return () => {
+      isMounted = false;
+      clearInterval(id);
+    };
   }, []);
 
   const getDayName = (dateStr: string) => {
@@ -700,11 +708,17 @@ export const PublicBookingDemo: React.FC<PublicBookingDemoProps> = ({ targetDate
   }, [date]);
 
   useEffect(() => {
+    let isMounted = true;
     const id = setInterval(() => {
-      setSlotsState(getSlots());
-      setReservations(getReservations());
+      if (isMounted) {
+        setSlotsState(getSlots());
+        setReservations(getReservations());
+      }
     }, POLL_MS);
-    return () => clearInterval(id);
+    return () => {
+      isMounted = false;
+      clearInterval(id);
+    };
   }, []);
 
   return (
