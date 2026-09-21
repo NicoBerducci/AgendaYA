@@ -376,6 +376,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
                           </button>
                           {interval.enabled !== false ? (
                             <button
+                              data-cy={`btn-deshabilitar-${day.toLowerCase()}-${colIndex}`}
                               onClick={() => handleDisableInterval(day, colIndex)}
                               style={{
                                 background: 'none',
@@ -396,6 +397,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
                             </button>
                           ) : (
                             <button
+                              data-cy={`btn-habilitar-${day.toLowerCase()}-${colIndex}`}
                               onClick={() => handleEnableInterval(day, colIndex)}
                               style={{
                                 background: 'none',
@@ -431,6 +433,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
             <div style={columnHeaderStyle}>Agregar Turno</div>
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div
+                data-cy="btn-agregar-turno"
                 onClick={handleAddTurnoClick}
                 style={{
                   width: 72,
