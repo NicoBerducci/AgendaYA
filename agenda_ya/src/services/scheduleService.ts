@@ -31,6 +31,14 @@ export interface ScheduleState {
   reservations: ReservationItem[];
 }
 
+function getFechaFuturaISO(diasEnElFuturo: number): string {
+  const fecha = new Date();
+  fecha.setDate(fecha.getDate() + diasEnElFuturo);
+  return fecha.toISOString().split('T')[0];
+}
+
+const fechaConReservasActivas = getFechaFuturaISO(10);
+
 const defaultState: ScheduleState = {
   workDays: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
   intervals: [
@@ -69,8 +77,8 @@ const defaultState: ScheduleState = {
   ],
   blockedDays: {
     // Día de prueba inyectado para simular reservas activas y testear el error de bloqueo
-    '2026-09-02': {
-      date: '2026-09-02',
+    [fechaConReservasActivas]: {
+      date: fechaConReservasActivas,
       status: 'Disponible',
       activeReservations: 5,
       isPublicSelectable: true,

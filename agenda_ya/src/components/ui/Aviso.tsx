@@ -7,14 +7,16 @@ export interface AvisoProps {
   ms?: number;
   onClose?: () => void;
   T: ThemeTokens;
+  dataCy?: string;
 }
 
-export function Aviso({ tipo, texto, ms, onClose, T }: AvisoProps) {
+export function Aviso({ tipo, texto, ms, onClose, T, dataCy }: AvisoProps) {
   if (!texto) return null;
   const exito = tipo === "ok";
   return (
     <div
       role="status"
+      data-cy={dataCy}
       style={{
         display: "flex", alignItems: "flex-start", gap: 10,
         background: exito ? T.okBg : T.errBg,

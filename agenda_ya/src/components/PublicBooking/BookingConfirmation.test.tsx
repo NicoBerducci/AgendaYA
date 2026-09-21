@@ -6,6 +6,20 @@ import { getSlot, getReservations, resetPublicBookingState } from '../../service
 describe('Módulo 4: Confirmación y Vencimiento de Reserva (Tomás Yanardi)', () => {
   const TEST_DATE = '2026-09-02'; // Fecha F + 7 para las pruebas
 
+  let consoleErrorMock: jest.SpyInstance;
+
+  beforeAll(() => {
+    const originalError = console.error;
+    consoleErrorMock = jest.spyOn(console, 'error').mockImplementation((...args) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) return;
+      originalError(...args);
+    });
+  });
+
+  afterAll(() => {
+    consoleErrorMock.mockRestore();
+  });
+
   beforeEach(() => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2026-09-02T10:00:00.000Z'));

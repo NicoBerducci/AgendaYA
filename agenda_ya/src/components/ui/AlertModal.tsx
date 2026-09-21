@@ -8,9 +8,10 @@ interface AlertModalProps {
   onClose?: () => void;
   botones?: React.ReactNode;
   T: ThemeTokens;
+  dataCy?: string;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClose, botones, T }) => {
+export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClose, botones, T, dataCy }) => {
   if (!open) return null;
 
   const getIcon = () => {
@@ -53,7 +54,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClo
   };
 
   return (
-    <div style={{
+    <div data-cy={dataCy} style={{
       position: 'fixed', inset: 0, zIndex: 999, display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.5)'
     }}>
       <div 
@@ -68,7 +69,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClo
         }}>
           <div>{getSmallIcon()}</div>
           {onClose && (
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>×</button>
+            <button data-cy={dataCy ? `${dataCy}-cerrar` : undefined} onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>×</button>
           )}
         </div>
         
