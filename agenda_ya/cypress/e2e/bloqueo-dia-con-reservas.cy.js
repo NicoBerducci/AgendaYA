@@ -24,6 +24,17 @@ describe('CP_006 - Intento de bloqueo de un día con reservas activas (Adriel)',
     cy.get('[data-cy="tab-CP_005"]').click();
     cy.get('[data-cy="panel-lateral"]').should('contain', 'No hay fechas seleccionadas');
 
+    // Si F+10 cruza a otro mes, navegamos el calendario antes de buscar el día — mismo tipo de bug que las fechas hardcodeadas, ver informe TP6
+    const fechaInicio = new Date();
+    fechaInicio.setDate(fechaInicio.getDate() + 7);
+    const fechaDestino = new Date();
+    fechaDestino.setDate(fechaDestino.getDate() + 10);
+    const diffMeses = (fechaDestino.getFullYear() - fechaInicio.getFullYear()) * 12 + (fechaDestino.getMonth() - fechaInicio.getMonth());
+    
+    for (let i = 0; i < diffMeses; i++) {
+      cy.get('[data-cy="mes-siguiente"]').click();
+    }
+
     // Act
     cy.get(`[data-cy="dia-${fechaF10}"]`).click();
     cy.get('[data-cy="btn-guardar"]').click();
