@@ -315,6 +315,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
                   <span style={{ fontSize: 18, color: '#1e293b' }}>{day}</span>
                   <div
                     onClick={() => toggleDay(day)}
+                    data-cy={`checkbox-day-${day.toLowerCase()}`}
                     style={{
                       width: 24,
                       height: 24,
@@ -367,6 +368,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
                           </span>
                           <button
                             onClick={() => handleEditClick(day, colIndex)}
+                            data-cy={`edit-button-${day.toLowerCase()}`}
                             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
                             title={`Editar Turno ${colIndex + 1}`}
                           >
@@ -485,6 +487,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
           </button>
           <button
             onClick={handleGlobalSave}
+            data-cy="button-save-workday"
             style={{
               padding: '12px 32px',
               background: '#a7f3d0',
@@ -558,6 +561,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
                     <span style={{ fontSize: 24, width: 70, color: '#000' }}>Inicio</span>
                     <input
                       type="time"
+                      data-cy="input-start-time"
                       value={editStart}
                       onChange={(e) => setEditStart(e.target.value)}
                       style={{
@@ -576,6 +580,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
                     <span style={{ fontSize: 24, width: 70, color: '#000' }}>Fin</span>
                     <input
                       type="time"
+                      data-cy="input-end-time"
                       value={editEnd}
                       onChange={(e) => setEditEnd(e.target.value)}
                       style={{
@@ -597,11 +602,13 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
             <div style={{ padding: '0 24px 24px', display: 'flex', justifyContent: 'flex-end', gap: 16 }}>
               <button
                 onClick={closeEditModal}
+                data-cy="button-cancel-modal"
                 style={{
                   padding: '12px 32px',
                   background: '#ef4444',
                   color: 'white',
                   border: 'none',
+
                   borderRadius: 8,
                   fontSize: 18,
                   fontWeight: 500,
@@ -612,6 +619,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
               </button>
               <button
                 onClick={handleSaveEdit}
+                data-cy="button-save-modal"
                 style={{
                   padding: '12px 32px',
                   background: '#a7f3d0',
