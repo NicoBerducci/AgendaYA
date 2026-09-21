@@ -29,11 +29,11 @@ export function Modal({ open, titulo, cuerpo, onSi, onNo, T, textoSi = "SI", tex
       }}
     >
       <div style={{ background: T.surface, borderRadius: 10, padding: "22px 24px", width: "min(420px,100%)", boxShadow: "0 18px 50px rgba(0,0,0,.28)" }}>
-        <div style={{ fontSize: 16.5, fontWeight: 700, color: T.text, lineHeight: 1.35 }}>{titulo}</div>
+        <div data-cy={dataCy ? `${dataCy}-titulo` : undefined} style={{ fontSize: 16.5, fontWeight: 700, color: T.text, lineHeight: 1.35 }}>{titulo}</div>
         {cuerpo && <div style={{ marginTop: 10, fontSize: 13.5, color: T.muted, lineHeight: 1.5 }}>{cuerpo}</div>}
         <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 22 }}>
-          <Boton tone="ghost" T={T} onClick={onNo} data-cy={dataCyNo}>{textoNo}</Boton>
-          <Boton tone="neutral" T={T} onClick={onSi} data-cy={dataCySi}>{textoSi}</Boton>
+          <Boton tone="ghost" T={T} data-cy={dataCyNo} onClick={onNo}>{textoNo}</Boton>
+          <Boton tone="neutral" T={T} data-cy={dataCySi} onClick={onSi}>{textoSi}</Boton>
         </div>
       </div>
     </div>
