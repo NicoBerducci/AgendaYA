@@ -76,3 +76,20 @@ export const calculateNextAvailableSlot = (lastSlotEndTimeStr, restPeriodMinutes
   return `${nextHours}:${nextMinutes}`;
 };
 
+/**
+ * Función para actualizar el estado del perfil del administrador vinculando el límite
+ */
+export const vincularLimiteAlPerfil = (perfilId, tipoEvento, limite) => {
+  if (!perfilId || !tipoEvento) {
+    return { success: false, errorMessage: 'Perfil y tipo de evento son requeridos' };
+  }
+  return { 
+    success: true, 
+    perfilActualizado: {
+      id: perfilId,
+      limites: {
+        [tipoEvento]: limite
+      }
+    }
+  };
+};
