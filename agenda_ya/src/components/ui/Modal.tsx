@@ -11,14 +11,18 @@ export interface ModalProps {
   T: ThemeTokens;
   textoSi?: string;
   textoNo?: string;
+  dataCy?: string;
+  dataCySi?: string;
+  dataCyNo?: string;
 }
 
-export function Modal({ open, titulo, cuerpo, onSi, onNo, T, textoSi = "SI", textoNo = "NO" }: ModalProps) {
+export function Modal({ open, titulo, cuerpo, onSi, onNo, T, textoSi = "SI", textoNo = "NO", dataCy, dataCySi, dataCyNo }: ModalProps) {
   if (!open) return null;
   return (
     <div
       role="dialog"
       aria-modal="true"
+      data-cy={dataCy}
       style={{
         position: "absolute", inset: 0, background: "rgba(10,16,18,.45)",
         display: "grid", placeItems: "center", zIndex: 60, padding: 16,
@@ -28,8 +32,8 @@ export function Modal({ open, titulo, cuerpo, onSi, onNo, T, textoSi = "SI", tex
         <div style={{ fontSize: 16.5, fontWeight: 700, color: T.text, lineHeight: 1.35 }}>{titulo}</div>
         {cuerpo && <div style={{ marginTop: 10, fontSize: 13.5, color: T.muted, lineHeight: 1.5 }}>{cuerpo}</div>}
         <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 22 }}>
-          <Boton tone="ghost" T={T} onClick={onNo}>{textoNo}</Boton>
-          <Boton tone="neutral" T={T} onClick={onSi}>{textoSi}</Boton>
+          <Boton tone="ghost" T={T} onClick={onNo} data-cy={dataCyNo}>{textoNo}</Boton>
+          <Boton tone="neutral" T={T} onClick={onSi} data-cy={dataCySi}>{textoSi}</Boton>
         </div>
       </div>
     </div>
