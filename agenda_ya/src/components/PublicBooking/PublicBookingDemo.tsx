@@ -374,6 +374,7 @@ function DevicePanel({
         {lockedTime && !confirmedBooking && !expired && (
           <>
             <div
+              data-cy="contador-tiempo"
               style={{
                 background: PHONE.countdownBg,
                 color: PHONE.countdownText,
@@ -414,6 +415,7 @@ function DevicePanel({
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Ej: Tomás Yanardi"
                   aria-label="Nombre completo"
+                  data-cy="input-nombre"
                   style={{
                     width: '100%',
                     padding: '6px 8px',
@@ -436,6 +438,7 @@ function DevicePanel({
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Ej: tomas.yanardi@gmail.com"
                   aria-label="Email"
+                  data-cy="input-email"
                   style={{
                     width: '100%',
                     padding: '6px 8px',
@@ -458,6 +461,7 @@ function DevicePanel({
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Ej: 2604123456"
                   aria-label="Teléfono"
+                  data-cy="input-telefono"
                   style={{
                     width: '100%',
                     padding: '6px 8px',
@@ -480,6 +484,7 @@ function DevicePanel({
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Comentario o aclaración"
                   aria-label="Nota adicional"
+                  data-cy="input-nota"
                   style={{
                     width: '100%',
                     padding: '6px 8px',
@@ -503,6 +508,7 @@ function DevicePanel({
             <div style={{ display: 'flex', gap: 6, marginTop: 2 }}>
               <button
                 type="button"
+                data-cy="btn-simular-expiracion"
                 onClick={() => {
                   if (lockedTime) {
                     expireLock(lockedTime);
@@ -528,6 +534,7 @@ function DevicePanel({
             <button
               onClick={handleConfirmarReserva}
               disabled={remainingMs <= 0}
+              data-cy="btn-confirmar-reserva"
               style={{
                 marginTop: 'auto',
                 background: PHONE.teal,
@@ -552,7 +559,7 @@ function DevicePanel({
 
         {/* PASO 5: PANTALLA DE CONFIRMACIÓN EXITOSA (CP_013 / US_034) */}
         {confirmedBooking && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+          <div data-cy="reserva-exitosa" style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <StepPill label="5 de 5 — Confirmación" />
             </div>
@@ -596,21 +603,21 @@ function DevicePanel({
                 fontSize: 11.5,
               }}
             >
-              <div>
+              <div data-cy="resumen-evento">
                 <strong style={{ color: PHONE.muted }}>Tipo de evento: </strong>
                 <span style={{ color: PHONE.text, fontWeight: 600 }}>{confirmedBooking.eventType}</span>
               </div>
-              <div>
+              <div data-cy="resumen-fecha">
                 <strong style={{ color: PHONE.muted }}>Fecha: </strong>
                 <span style={{ color: PHONE.text, fontWeight: 600 }}>{fmtLargo(confirmedBooking.date)}</span>
               </div>
-              <div>
+              <div data-cy="resumen-horario">
                 <strong style={{ color: PHONE.muted }}>Horario: </strong>
                 <span style={{ color: PHONE.text, fontWeight: 600 }}>
                   {confirmedBooking.time} a {confirmedBooking.endTime} hs
                 </span>
               </div>
-              <div>
+              <div data-cy="resumen-nombre">
                 <strong style={{ color: PHONE.muted }}>Nombre: </strong>
                 <span style={{ color: PHONE.text, fontWeight: 600 }}>{confirmedBooking.fullName}</span>
               </div>
@@ -658,7 +665,7 @@ function DevicePanel({
         {expired && !confirmedBooking && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, flex: 1, textAlign: 'center' }}>
             <div style={{ fontSize: 36 }}>⏱</div>
-            <div style={{ fontSize: 13.5, fontWeight: 700, color: PHONE.countdownText, lineHeight: 1.4 }}>
+            <div data-cy="error-timeout" style={{ fontSize: 13.5, fontWeight: 700, color: PHONE.countdownText, lineHeight: 1.4 }}>
               El tiempo para confirmar la reserva expiró
             </div>
             <div style={{ fontSize: 11, color: PHONE.muted }}>
@@ -666,6 +673,7 @@ function DevicePanel({
             </div>
             <button
               onClick={handleResetDevice}
+              data-cy="btn-elegir-nuevo-horario"
               style={{
                 marginTop: 12,
                 background: PHONE.teal,

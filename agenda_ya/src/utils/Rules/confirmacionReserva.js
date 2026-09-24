@@ -41,7 +41,18 @@ export const validarNombre = (nombre) => {
  * US_033: Valida formato de teléfono (al menos 6 dígitos numéricos)
  */
 export const validarTelefono = (telefono) => {
-  if (!telefono || telefono.trim().replace(/[\s-]/g, '').length < 6) {
+  if (!telefono) {
+    return {
+      isValid: false,
+      errorMessage: 'Ingrese un teléfono válido para continuar'
+    };
+  }
+
+  // Verifica que solo contenga números, espacios o guiones
+  const contieneLetras = /[^\d\s-]/;
+  const longitudLimpia = telefono.trim().replace(/[\s-]/g, '').length;
+
+  if (contieneLetras.test(telefono) || longitudLimpia < 6) {
     return {
       isValid: false,
       errorMessage: 'Ingrese un teléfono válido para continuar'
