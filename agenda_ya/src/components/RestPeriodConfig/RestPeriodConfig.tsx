@@ -57,7 +57,7 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
 
   return (
     <div style={{ padding: 16, border: `1px solid ${T.line}`, borderRadius: 8, background: T.surface, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-      <Boton T={T} onClick={handleOpenModal} tone="neutral">
+      <Boton T={T} onClick={handleOpenModal} tone="neutral" data-cy="btn-abrir-descanso">
         Configurar descansos entre reservas
       </Boton>
 
@@ -69,6 +69,9 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
         textoNo="Cerrar"
         onSi={handleSave}
         onNo={handleCloseModal}
+        dataCy="modal-descanso"
+        dataCySi="btn-guardar-descanso"
+        dataCyNo="btn-cerrar-descanso"
         cuerpo={
           <div>
             <div style={{ marginBottom: 16 }}>
@@ -81,6 +84,7 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
                 value={minutesInput}
                 onChange={(e) => setMinutesInput(e.target.value)}
                 disabled={loading}
+                data-cy="input-minutos-descanso"
                 style={{
                   width: '100%', boxSizing: 'border-box', padding: '8px 10px', fontSize: 14,
                   border: `1px solid ${T.lineStrong}`, borderRadius: 6,
@@ -92,6 +96,7 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
               T={T}
               texto={feedbackMessage || undefined}
               tipo={isSuccess ? "ok" : "err"}
+              dataCy="aviso-descanso"
             />
           </div>
         }

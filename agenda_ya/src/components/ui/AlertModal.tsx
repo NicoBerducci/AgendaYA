@@ -8,9 +8,10 @@ interface AlertModalProps {
   onClose?: () => void;
   botones?: React.ReactNode;
   T: ThemeTokens;
+  dataCy?: string;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClose, botones, T }) => {
+export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClose, botones, T, dataCy }) => {
   if (!open) return null;
 
   const getIcon = () => {
@@ -53,10 +54,12 @@ export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClo
   };
 
   return (
-    <div style={{
+    <div data-cy={dataCy} style={{
       position: 'fixed', inset: 0, zIndex: 999, display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.5)'
     }}>
-      <div style={{
+      <div 
+        data-cy="modal-validation-error"
+        style={{
         background: '#fff', width: 450, borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         display: 'flex', flexDirection: 'column'
       }}>
@@ -66,7 +69,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClo
         }}>
           <div>{getSmallIcon()}</div>
           {onClose && (
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>×</button>
+            <button data-cy={dataCy ? `${dataCy}-cerrar` : undefined} onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>×</button>
           )}
         </div>
         
@@ -75,7 +78,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({ open, tipo, texto, onClo
           <div style={{ flexShrink: 0 }}>
             {getIcon()}
           </div>
-          <div style={{ fontSize: 18, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
+          <div data-cy="modal-error-message" style={{ fontSize: 18, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
             {texto}
           </div>
         </div>

@@ -3,6 +3,20 @@ import { act, render, screen, fireEvent } from '@testing-library/react';
 import { PublicBookingDemo } from './PublicBookingDemo';
 
 describe('CP_011 — Selección de horario con bloqueo temporal e inicio de contador (Gracia Ignacio)', () => {
+  let consoleErrorMock: jest.SpyInstance;
+
+  beforeAll(() => {
+    const originalError = console.error;
+    consoleErrorMock = jest.spyOn(console, 'error').mockImplementation((...args) => {
+      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) return;
+      originalError(...args);
+    });
+  });
+
+  afterAll(() => {
+    consoleErrorMock.mockRestore();
+  });
+
   beforeEach(() => {
     jest.useFakeTimers();
   });
