@@ -120,7 +120,6 @@ export default function Home() {
             ].map(tab => (
               <button
                 key={tab.id}
-                data-cy={`tab-${tab.id}`}
                 onClick={() => handleTabChange(tab.id)}
                 data-cy={`tab-${tab.id}`}
                 style={{
