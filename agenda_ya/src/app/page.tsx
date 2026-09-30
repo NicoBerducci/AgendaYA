@@ -120,8 +120,8 @@ export default function Home() {
             ].map(tab => (
               <button
                 key={tab.id}
-                data-cy={`tab-${tab.id}`}
                 onClick={() => handleTabChange(tab.id)}
+                data-cy={`tab-${tab.id}`}
                 style={{
                   background: activeTab === tab.id ? T.sideActive : 'transparent',
                   color: activeTab === tab.id ? '#0B2A20' : T.muted,

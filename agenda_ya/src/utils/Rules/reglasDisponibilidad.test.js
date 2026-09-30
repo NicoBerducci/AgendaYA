@@ -1,4 +1,4 @@
-import { validarAntelacion, esHorarioVisible, validarLimiteDiario, configureRestPeriod, calculateNextAvailableSlot } from './reglasDisponibilidad';
+import { validarAntelacion, esHorarioVisible, validarLimiteDiario, configureRestPeriod, calculateNextAvailableSlot, vincularLimiteAlPerfil } from './reglasDisponibilidad';
 
 describe('Épica: Reglas de Disponibilidad', () => {
 
@@ -56,6 +56,31 @@ describe('Épica: Reglas de Disponibilidad', () => {
       
       expect(resultado.isValid).toBe(true);
       expect(resultado.sinLimite).toBe(true);
+    });
+
+    it('Debe aceptar y devolver el valor si es un entero mayor a 0', () => {
+      const resultado = validarLimiteDiario(10);
+      
+      expect(resultado.isValid).toBe(true);
+      expect(resultado.sinLimite).toBe(false);
+      expect(resultado.valor).toBe(10);
+    });
+  });
+
+  describe('US_023: Actualizar el estado del perfil del administrador', () => {
+    it('Debe actualizar el perfil con el nuevo límite para el tipo de evento', () => {
+      const resultado = vincularLimiteAlPerfil('admin-123', 'Consulta General', 10);
+      
+      expect(resultado.success).toBe(true);
+      expect(resultado.perfilActualizado.id).toBe('admin-123');
+      expect(resultado.perfilActualizado.limites['Consulta General']).toBe(10);
+    });
+
+    it('Debe devolver error si falta el perfil o el tipo de evento', () => {
+      const resultado = vincularLimiteAlPerfil(null, null, 10);
+      
+      expect(resultado.success).toBe(false);
+      expect(resultado.errorMessage).toBe('Perfil y tipo de evento son requeridos');
     });
   });
 

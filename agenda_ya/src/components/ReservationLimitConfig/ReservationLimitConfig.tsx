@@ -209,6 +209,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
                 value={limitInput}
                 onChange={(e) => setLimitInput(e.target.value)}
                 disabled={loading}
+                data-cy="daily-limit-input"
                 style={{
                   flex: 1,
                   padding: '12px 16px',
@@ -242,7 +243,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
         </div>
         
         {feedbackMessage && (
-          <div style={{ position: 'fixed', zIndex: 10000 }}>
+          <div style={{ position: 'fixed', inset: 0, zIndex: 10000 }} data-cy={isSuccess ? 'success-message' : 'error-message'}>
             <AlertModal
               T={T}
               open={true}
@@ -294,6 +295,7 @@ export const ReservationLimitConfig: React.FC<ReservationLimitConfigProps> = ({ 
           <button
             onClick={handleSave}
             disabled={loading}
+            data-cy="save-daily-limit-button"
             style={{
               padding: '12px 32px',
               background: '#A7F3D0', // light green
