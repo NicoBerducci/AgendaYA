@@ -96,6 +96,7 @@ function SlotButton({
   const selected = state === 'seleccionado';
   return (
     <button
+      data-cy={`slot-${time}`}
       onClick={onClick}
       disabled={disabled}
       style={{
@@ -275,7 +276,7 @@ function DevicePanel({
   const endTime = lockedTime ? calculateEndTime(lockedTime, 30) : null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+      <div data-cy={`device-panel-${deviceId}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
       <div style={{ fontSize: 11.5, fontWeight: 700, color: '#5B6B6E', fontFamily: FONT }}>
         📱 {deviceLabel} — Usuario invitado
       </div>
@@ -352,6 +353,7 @@ function DevicePanel({
             <button
               onClick={handleContinuar}
               disabled={!pendingTime}
+              data-cy="btn-continuar"
               style={{
                 marginTop: 'auto',
                 background: pendingTime ? PHONE.teal : '#CBD3D1',

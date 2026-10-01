@@ -19,6 +19,7 @@ const BLOCK_MESSAGE =
 function BlockDialog() {
   return (
     <div
+      data-cy="pantalla-bloqueo-desktop"
       style={{
         width: '100%',
         background: '#fff',
@@ -46,7 +47,7 @@ function BlockDialog() {
           <line x1="15" y1="9" x2="9" y2="15" />
           <line x1="9" y1="9" x2="15" y2="15" />
         </svg>
-        <div style={{ fontSize: 16, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
+        <div data-cy="mensaje-bloqueo-desktop" style={{ fontSize: 16, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
           {BLOCK_MESSAGE}
         </div>
       </div>
@@ -103,6 +104,7 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
           {(['desktop', 'mobile'] as DeviceType[]).map((opt) => (
             <button
               key={opt}
+              data-cy={opt === 'desktop' ? 'btn-user-agent-desktop' : 'btn-user-agent-mobile'}
               onClick={() => setUserAgent(opt)}
               style={{
                 background: userAgent === opt ? T.sideActive : 'transparent',
@@ -124,6 +126,7 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
         <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: T.text }}>
           <input
             type="checkbox"
+            data-cy="checkbox-ventana-angosta"
             checked={narrowWindow}
             onChange={(e) => setNarrowWindow(e.target.checked)}
           />

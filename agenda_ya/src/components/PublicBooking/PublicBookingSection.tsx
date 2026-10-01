@@ -33,6 +33,7 @@ export const PublicBookingSection: React.FC<PublicBookingSectionProps> = ({
         ).map((tab) => (
           <button
             key={tab.id}
+            data-cy={`subtab-${tab.id}`}
             onClick={() => setSubTab(tab.id)}
             style={{
               background: subTab === tab.id ? T.sideActive : 'transparent',
