@@ -66,7 +66,11 @@ export const resetPublicBookingState = (dateStr: string = ''): void => {
 
 const releaseExpiredLocks = (now: number): void => {
   state.slots.forEach((slot) => {
-    if (slot.status === 'preseleccionado' && slot.lockExpiresAt !== undefined && slot.lockExpiresAt <= now) {
+    if (
+      slot.status === 'preseleccionado' &&
+      slot.lockExpiresAt !== undefined &&
+      slot.lockExpiresAt <= now
+    ) {
       slot.status = 'disponible';
       slot.lockedBy = undefined;
       slot.lockExpiresAt = undefined;
@@ -102,7 +106,7 @@ export const getReservationForSlot = (time: string): BookingData | undefined => 
  */
 export const selectSlot = (
   time: string,
-  deviceId: string
+  deviceId: string,
 ): { ok: boolean; message?: string; slot?: Slot } => {
   releaseExpiredLocks(Date.now());
   const slot = state.slots.find((s) => s.time === time);
@@ -126,7 +130,7 @@ export const selectSlot = (
 export const confirmBooking = (
   time: string,
   deviceId: string,
-  clientData: ClientData
+  clientData: ClientData,
 ): { ok: boolean; message?: string; reservation?: BookingData } => {
   releaseExpiredLocks(Date.now());
   const slot = state.slots.find((s) => s.time === time);

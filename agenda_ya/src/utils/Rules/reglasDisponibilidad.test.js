@@ -1,19 +1,27 @@
-import { validarAntelacion, esHorarioVisible, validarLimiteDiario, configureRestPeriod, calculateNextAvailableSlot, vincularLimiteAlPerfil } from './reglasDisponibilidad';
+import {
+  validarAntelacion,
+  esHorarioVisible,
+  validarLimiteDiario,
+  configureRestPeriod,
+  calculateNextAvailableSlot,
+  vincularLimiteAlPerfil,
+} from './reglasDisponibilidad';
 
 describe('Épica: Reglas de Disponibilidad', () => {
-
   // PRUEBA 1: correspondendiente a US_021
   describe('US_021: Configurar antelación mínima', () => {
     it('Debe devolver error si el valor está fuera del rango (ej. 75 horas)', () => {
       const resultado = validarAntelacion(75, 'Consulta General');
-      
+
       expect(resultado.isValid).toBe(false);
-      expect(resultado.errorMessage).toBe('El valor de antelación para el evento Consulta General debe estar entre 0 y 72 horas');
+      expect(resultado.errorMessage).toBe(
+        'El valor de antelación para el evento Consulta General debe estar entre 0 y 72 horas',
+      );
     });
 
     it('Debe configurar la antelación en 0 si no se asigna un valor', () => {
       const resultado = validarAntelacion(null, 'Consulta General');
-      
+
       expect(resultado.isValid).toBe(true);
       expect(resultado.valor).toBe(0);
     });
@@ -25,7 +33,7 @@ describe('Épica: Reglas de Disponibilidad', () => {
       // Escenario 1: Son las 10:00, antelación 2hs, turno a las 11:00 (Invalido)
       const horaActual = new Date('2026-06-19T10:00:00');
       const horaTurno = new Date('2026-06-19T11:00:00');
-      const antelacionMinima = 2; 
+      const antelacionMinima = 2;
 
       const visible = esHorarioVisible(horaActual, horaTurno, antelacionMinima);
       expect(visible).toBe(false);
@@ -46,21 +54,21 @@ describe('Épica: Reglas de Disponibilidad', () => {
   describe('US_023: Configurar límite diario de reservas', () => {
     it('Debe devolver error si se ingresa un valor de 0', () => {
       const resultado = validarLimiteDiario(0);
-      
+
       expect(resultado.isValid).toBe(false);
       expect(resultado.errorMessage).toBe('El límite debe ser un número entero mayor a 0');
     });
 
     it('Debe asimilar "sin límite" si el campo se envía vacío', () => {
       const resultado = validarLimiteDiario(''); // Campo vacío
-      
+
       expect(resultado.isValid).toBe(true);
       expect(resultado.sinLimite).toBe(true);
     });
 
     it('Debe aceptar y devolver el valor si es un entero mayor a 0', () => {
       const resultado = validarLimiteDiario(10);
-      
+
       expect(resultado.isValid).toBe(true);
       expect(resultado.sinLimite).toBe(false);
       expect(resultado.valor).toBe(10);
@@ -70,7 +78,7 @@ describe('Épica: Reglas de Disponibilidad', () => {
   describe('US_023: Actualizar el estado del perfil del administrador', () => {
     it('Debe actualizar el perfil con el nuevo límite para el tipo de evento', () => {
       const resultado = vincularLimiteAlPerfil('admin-123', 'Consulta General', 10);
-      
+
       expect(resultado.success).toBe(true);
       expect(resultado.perfilActualizado.id).toBe('admin-123');
       expect(resultado.perfilActualizado.limites['Consulta General']).toBe(10);
@@ -78,7 +86,7 @@ describe('Épica: Reglas de Disponibilidad', () => {
 
     it('Debe devolver error si falta el perfil o el tipo de evento', () => {
       const resultado = vincularLimiteAlPerfil(null, null, 10);
-      
+
       expect(resultado.success).toBe(false);
       expect(resultado.errorMessage).toBe('Perfil y tipo de evento son requeridos');
     });
@@ -118,5 +126,4 @@ describe('Épica: Reglas de Disponibilidad', () => {
       expect(result).toBe('10:30');
     });
   });
-
 });

@@ -1,7 +1,11 @@
 import React from 'react';
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { PublicBookingDemo } from './PublicBookingDemo';
-import { getSlot, getReservations, resetPublicBookingState } from '../../services/publicBookingService';
+import {
+  getSlot,
+  getReservations,
+  resetPublicBookingState,
+} from '../../services/publicBookingService';
 
 describe('Módulo 4: Confirmación y Vencimiento de Reserva (Tomás Yanardi)', () => {
   const TEST_DATE = '2026-09-02'; // Fecha F + 7 para las pruebas
@@ -46,7 +50,9 @@ describe('Módulo 4: Confirmación y Vencimiento de Reserva (Tomás Yanardi)', (
       fireEvent.click(continuarButtons[0]);
 
       // Paso 1: Observar el formulario de datos personales con el contador regresivo visible
-      expect(screen.getByText(/Tiempo restante para completar la reserva: 10:00 min/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Tiempo restante para completar la reserva: 10:00 min/),
+      ).toBeInTheDocument();
       const confirmButton = screen.getByRole('button', { name: 'Confirmar' });
       expect(confirmButton).toBeEnabled();
 

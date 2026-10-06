@@ -8,12 +8,15 @@ export interface ReservationLimitResponse {
   sinLimite?: boolean;
 }
 
-export const saveReservationLimit = async (limit: number | string): Promise<ReservationLimitResponse> => {
+export const saveReservationLimit = async (
+  limit: number | string,
+): Promise<ReservationLimitResponse> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const validationResult: ReservationLimitResponse = { ...validarLimiteDiario(limit) };
       if (validationResult.isValid) {
-        validationResult.successMessage = "El límite máximo de reservas fue configurado exitosamente";
+        validationResult.successMessage =
+          'El límite máximo de reservas fue configurado exitosamente';
       }
       resolve(validationResult);
     }, 5);

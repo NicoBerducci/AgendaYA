@@ -4,7 +4,6 @@ import { BlockDayConfig } from './BlockDayConfig';
 import { resetScheduleState } from '../../services/scheduleService';
 
 describe('US_013 — CP_005: Bloquear un día sin reservas previas (Espejo Adriel)', () => {
-
   // F+7 calculado en tiempo de ejecución: el test no caduca cuando pasa la fecha
   const fPlus7 = new Date();
   fPlus7.setDate(fPlus7.getDate() + 7);
@@ -35,7 +34,9 @@ describe('US_013 — CP_005: Bloquear un día sin reservas previas (Espejo Adrie
     expect(modeSelector).toHaveValue('Bloqueo');
 
     // 3. Seleccionar en el calendario la fecha F + 7
-    const calendarButton = screen.getByRole('button', { name: new RegExp(`Fecha F\\+7 \\(${testDateStr}\\)`, 'i') });
+    const calendarButton = screen.getByRole('button', {
+      name: new RegExp(`Fecha F\\+7 \\(${testDateStr}\\)`, 'i'),
+    });
     fireEvent.click(calendarButton);
 
     // La fecha queda en el panel lateral con campo de motivo editable
@@ -60,7 +61,7 @@ describe('US_013 — CP_005: Bloquear un día sin reservas previas (Espejo Adrie
     // El sistema aplica el bloqueo y muestra el mensaje exacto
     await waitFor(() => {
       expect(
-        screen.getByText(`Los siguientes días fueron bloqueados exitosamente: ${testDateStr}`)
+        screen.getByText(`Los siguientes días fueron bloqueados exitosamente: ${testDateStr}`),
       ).toBeInTheDocument();
     });
 
@@ -81,5 +82,4 @@ describe('US_013 — CP_005: Bloquear un día sin reservas previas (Espejo Adrie
     const publicSection = screen.getByText(/Vista Pública de la Agenda/i).closest('div');
     expect(publicSection).not.toHaveTextContent(/Motivo interno/i);
   });
-
 });

@@ -24,12 +24,12 @@ describe('reglasDisponibilidad - Configuración de descanso (Facundo)', () => {
     expect(result.valor).toBe(120);
   });
 
-  it('4. calculateNextAvailableSlot(\'09:00\', 15) -> normal: debe devolver \'09:15\'', () => {
+  it("4. calculateNextAvailableSlot('09:00', 15) -> normal: debe devolver '09:15'", () => {
     const result = calculateNextAvailableSlot('09:00', 15);
     expect(result).toBe('09:15');
   });
 
-  it('5. calculateNextAvailableSlot(\'23:50\', 20) -> borde (cruce de medianoche): debe devolver \'00:10\'', () => {
+  it("5. calculateNextAvailableSlot('23:50', 20) -> borde (cruce de medianoche): debe devolver '00:10'", () => {
     const result = calculateNextAvailableSlot('23:50', 20);
     expect(result).toBe('00:10');
   });

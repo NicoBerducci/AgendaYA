@@ -2,7 +2,7 @@
  * US_021: Valida que la antelación esté entre 0 y 72 horas. Si es nulo, devuelve 0.
  */
 export const validarAntelacion = (horas, nombreEvento) => {
-  if (horas === null || horas === undefined || horas === "") {
+  if (horas === null || horas === undefined || horas === '') {
     return { isValid: true, valor: 0 };
   }
 
@@ -31,7 +31,7 @@ export const esHorarioVisible = (horaActual, horaTurno, antelacionHoras) => {
  * US_023: Valida que el límite diario sea un entero mayor a 0, o lo marca sin límite si está vacío
  */
 export const validarLimiteDiario = (limite) => {
-  if (limite === null || limite === undefined || limite === "") {
+  if (limite === null || limite === undefined || limite === '') {
     return { isValid: true, sinLimite: true };
   }
 
@@ -39,7 +39,7 @@ export const validarLimiteDiario = (limite) => {
   if (isNaN(limite) || limite <= 0 || !Number.isInteger(Number(limite))) {
     return {
       isValid: false,
-      errorMessage: "El límite debe ser un número entero mayor a 0",
+      errorMessage: 'El límite debe ser un número entero mayor a 0',
     };
   }
 
@@ -54,12 +54,12 @@ export const configureRestPeriod = (minutes) => {
   if (isNaN(numMinutes) || numMinutes < 0 || numMinutes > 120) {
     return {
       isValid: false,
-      errorMessage: "El intervalo debe estar entre 0 y 120 minutos",
+      errorMessage: 'El intervalo debe estar entre 0 y 120 minutos',
     };
   }
   return {
     isValid: true,
-    successMessage: "El intervalo entre turnos fue configurado exitosamente",
+    successMessage: 'El intervalo entre turnos fue configurado exitosamente',
     valor: numMinutes,
   };
 };
@@ -68,11 +68,11 @@ export const configureRestPeriod = (minutes) => {
  * US_020: Aplicar descanso en la agenda pública
  */
 export const calculateNextAvailableSlot = (lastSlotEndTimeStr, restPeriodMinutes) => {
-  const [hours, minutes] = lastSlotEndTimeStr.split(":").map(Number);
+  const [hours, minutes] = lastSlotEndTimeStr.split(':').map(Number);
   const date = new Date(2000, 0, 1, hours, minutes);
   date.setMinutes(date.getMinutes() + restPeriodMinutes);
-  const nextHours = String(date.getHours()).padStart(2, "0");
-  const nextMinutes = String(date.getMinutes()).padStart(2, "0");
+  const nextHours = String(date.getHours()).padStart(2, '0');
+  const nextMinutes = String(date.getMinutes()).padStart(2, '0');
   return `${nextHours}:${nextMinutes}`;
 };
 
@@ -83,13 +83,13 @@ export const vincularLimiteAlPerfil = (perfilId, tipoEvento, limite) => {
   if (!perfilId || !tipoEvento) {
     return { success: false, errorMessage: 'Perfil y tipo de evento son requeridos' };
   }
-  return { 
-    success: true, 
+  return {
+    success: true,
     perfilActualizado: {
       id: perfilId,
       limites: {
-        [tipoEvento]: limite
-      }
-    }
+        [tipoEvento]: limite,
+      },
+    },
   };
 };

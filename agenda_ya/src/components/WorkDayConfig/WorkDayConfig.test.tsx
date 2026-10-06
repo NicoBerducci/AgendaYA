@@ -4,7 +4,6 @@ import { WorkDayConfig } from './WorkDayConfig';
 import { resetScheduleState } from '../../services/scheduleService';
 
 describe('Casos de prueba de Paula Bomprezzi (CP_003 y CP_004) en WorkDayConfig', () => {
-
   beforeEach(() => {
     resetScheduleState();
   });
@@ -27,7 +26,11 @@ describe('Casos de prueba de Paula Bomprezzi (CP_003 y CP_004) en WorkDayConfig'
 
     // Verificar popup de éxito
     await waitFor(() => {
-      expect(screen.getByText(/Se deshabilitó el intervalo del turno Turno 1 del día Miércoles exitosamente/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Se deshabilitó el intervalo del turno Turno 1 del día Miércoles exitosamente/i,
+        ),
+      ).toBeInTheDocument();
     });
 
     // Cerrar el modal de aviso
@@ -48,7 +51,9 @@ describe('Casos de prueba de Paula Bomprezzi (CP_003 y CP_004) en WorkDayConfig'
 
     // Verificar popup de habilitación exitosa
     await waitFor(() => {
-      expect(screen.getByText(/Se habilitó el intervalo del turno Turno 1 del día Martes exitosamente/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Se habilitó el intervalo del turno Turno 1 del día Martes exitosamente/i),
+      ).toBeInTheDocument();
     });
   });
 
@@ -75,8 +80,9 @@ describe('Casos de prueba de Paula Bomprezzi (CP_003 y CP_004) en WorkDayConfig'
 
     // 5. Debe bloquearse el guardado real y mostrar el mensaje exacto de error
     await waitFor(() => {
-      expect(screen.getByText(/Hay superposición de horarios en el día Lunes/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Hay superposición de horarios en el día Lunes/i),
+      ).toBeInTheDocument();
     });
   });
-
 });
