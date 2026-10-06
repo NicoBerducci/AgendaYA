@@ -43,7 +43,9 @@ describe('CP_011 — Selección de horario con bloqueo temporal e inicio de cont
     const continuarButtons = screen.getAllByRole('button', { name: 'Continuar' });
     fireEvent.click(continuarButtons[0]);
 
-    expect(screen.getByText(/Tiempo restante para completar la reserva: 10:00 min/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Tiempo restante para completar la reserva: 10:00 min/),
+    ).toBeInTheDocument();
 
     // El Dispositivo B refresca su listado (polling < 2 segundos)
     act(() => {

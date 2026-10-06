@@ -37,7 +37,7 @@ describe('CP_005 - Bloqueo de un día sin reservas previas (Adriel)', () => {
     // Assert
     cy.get('[data-cy="alert-modal"]').should(
       'contain',
-      `Los siguientes días fueron bloqueados exitosamente: ${fechaF7}`
+      `Los siguientes días fueron bloqueados exitosamente: ${fechaF7}`,
     );
 
     cy.get('[data-cy="alert-modal-cerrar"]').click();

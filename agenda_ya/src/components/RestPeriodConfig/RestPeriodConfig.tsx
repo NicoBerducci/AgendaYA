@@ -12,7 +12,7 @@ interface RestPeriodConfigProps {
 }
 
 export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => {
-  const T = theme || LIGHT; 
+  const T = theme || LIGHT;
 
   const [isOpen, setIsOpen] = useState(false);
   const [minutesInput, setMinutesInput] = useState<string>('0');
@@ -47,7 +47,9 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
     const response = await saveRestPeriod(minutesInput);
     if (response.isValid) {
       setIsSuccess(true);
-      setFeedbackMessage(response.successMessage || 'El intervalo entre turnos fue configurado exitosamente');
+      setFeedbackMessage(
+        response.successMessage || 'El intervalo entre turnos fue configurado exitosamente',
+      );
     } else {
       setIsSuccess(false);
       setFeedbackMessage(response.errorMessage || 'El intervalo debe estar entre 0 y 120 minutos');
@@ -56,7 +58,15 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
   };
 
   return (
-    <div style={{ padding: 16, border: `1px solid ${T.line}`, borderRadius: 8, background: T.surface, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+    <div
+      style={{
+        padding: 16,
+        border: `1px solid ${T.line}`,
+        borderRadius: 8,
+        background: T.surface,
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+      }}
+    >
       <Boton T={T} onClick={handleOpenModal} tone="neutral" data-cy="btn-abrir-descanso">
         Configurar descansos entre reservas
       </Boton>
@@ -75,7 +85,16 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
         cuerpo={
           <div>
             <div style={{ marginBottom: 16 }}>
-              <label htmlFor="rest-period-input" style={{ display: 'block', fontSize: 13.5, fontWeight: 600, color: T.text, marginBottom: 4 }}>
+              <label
+                htmlFor="rest-period-input"
+                style={{
+                  display: 'block',
+                  fontSize: 13.5,
+                  fontWeight: 600,
+                  color: T.text,
+                  marginBottom: 4,
+                }}
+              >
                 Minutos de descanso
               </label>
               <input
@@ -86,16 +105,21 @@ export const RestPeriodConfig: React.FC<RestPeriodConfigProps> = ({ theme }) => 
                 disabled={loading}
                 data-cy="input-minutos-descanso"
                 style={{
-                  width: '100%', boxSizing: 'border-box', padding: '8px 10px', fontSize: 14,
-                  border: `1px solid ${T.lineStrong}`, borderRadius: 6,
-                  background: T.surface, color: T.text,
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  padding: '8px 10px',
+                  fontSize: 14,
+                  border: `1px solid ${T.lineStrong}`,
+                  borderRadius: 6,
+                  background: T.surface,
+                  color: T.text,
                 }}
               />
             </div>
             <Aviso
               T={T}
               texto={feedbackMessage || undefined}
-              tipo={isSuccess ? "ok" : "err"}
+              tipo={isSuccess ? 'ok' : 'err'}
               dataCy="aviso-descanso"
             />
           </div>

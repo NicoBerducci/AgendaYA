@@ -46,7 +46,16 @@ function BlockDialog() {
           <line x1="15" y1="9" x2="9" y2="15" />
           <line x1="9" y1="9" x2="15" y2="15" />
         </svg>
-        <div style={{ fontSize: 16, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
+        <div
+          style={{
+            fontSize: 16,
+            fontWeight: 500,
+            color: '#333',
+            textAlign: 'center',
+            flex: 1,
+            lineHeight: 1.4,
+          }}
+        >
           {BLOCK_MESSAGE}
         </div>
       </div>
@@ -99,7 +108,16 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 8, background: T.panel, padding: 4, borderRadius: 8, border: `1px solid ${T.lineStrong}` }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            background: T.panel,
+            padding: 4,
+            borderRadius: 8,
+            border: `1px solid ${T.lineStrong}`,
+          }}
+        >
           {(['desktop', 'mobile'] as DeviceType[]).map((opt) => (
             <button
               key={opt}
@@ -121,7 +139,9 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
           ))}
         </div>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: T.text }}>
+        <label
+          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: T.text }}
+        >
           <input
             type="checkbox"
             checked={narrowWindow}
@@ -152,7 +172,9 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
 
         {!isBlocked && (
           <>
-            <div style={{ fontSize: 13, fontWeight: 700, color: T.text }}>Seleccioná el tipo de evento</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: T.text }}>
+              Seleccioná el tipo de evento
+            </div>
             <select
               value={eventType}
               onChange={(e) => setEventType(e.target.value)}

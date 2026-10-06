@@ -4,7 +4,6 @@ import { RestPeriodConfig } from './RestPeriodConfig';
 import { resetRestPeriod } from '../../services/restPeriodService';
 
 describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre reservas', () => {
-
   describe('CP_007 — Positivo: Configurar descanso entre reservas válido', () => {
     beforeEach(() => {
       // Prerrequisito: El valor de descanso global está en su estado inicial de 0 minutos
@@ -14,12 +13,16 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
     it('CP_007 - Permite ingresar 15 minutos, guarda exitosamente y persiste el valor al volver a entrar', async () => {
       // 1. Renderear componente y presionar "Configurar descansos entre reservas"
       const { unmount } = render(<RestPeriodConfig />);
-      const openButton = screen.getByRole('button', { name: /configurar descansos entre reservas/i });
+      const openButton = screen.getByRole('button', {
+        name: /configurar descansos entre reservas/i,
+      });
       fireEvent.click(openButton);
 
       // Verificar modal abierto con el texto exacto y valor precargado 0
       await waitFor(() => {
-        expect(screen.getByText('Ingrese el intervalo de descanso en minutos que desea:')).toBeInTheDocument();
+        expect(
+          screen.getByText('Ingrese el intervalo de descanso en minutos que desea:'),
+        ).toBeInTheDocument();
       });
       const input = screen.getByLabelText(/minutos de descanso/i) as HTMLInputElement;
       expect(input.value).toBe('0');
@@ -35,7 +38,7 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
       // Se muestra el mensaje exacto de éxito
       await waitFor(() => {
         expect(
-          screen.getByText('El intervalo entre turnos fue configurado exitosamente')
+          screen.getByText('El intervalo entre turnos fue configurado exitosamente'),
         ).toBeInTheDocument();
       });
 
@@ -48,7 +51,9 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
 
       // Volver a montar el componente
       render(<RestPeriodConfig />);
-      const newOpenButton = screen.getByRole('button', { name: /configurar descansos entre reservas/i });
+      const newOpenButton = screen.getByRole('button', {
+        name: /configurar descansos entre reservas/i,
+      });
       fireEvent.click(newOpenButton);
 
       // El campo debe mostrar 15 (persistencia real confirmada)
@@ -68,12 +73,16 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
     it('CP_008 - Rechaza 121 minutos con el mensaje de error exacto y mantiene el valor vigente (15)', async () => {
       // 1. Renderear componente y presionar "Configurar descansos entre reservas"
       const { unmount } = render(<RestPeriodConfig />);
-      const openButton = screen.getByRole('button', { name: /configurar descansos entre reservas/i });
+      const openButton = screen.getByRole('button', {
+        name: /configurar descansos entre reservas/i,
+      });
       fireEvent.click(openButton);
 
       // Modal se abre y el campo muestra el valor vigente 15
       await waitFor(() => {
-        expect(screen.getByText('Ingrese el intervalo de descanso en minutos que desea:')).toBeInTheDocument();
+        expect(
+          screen.getByText('Ingrese el intervalo de descanso en minutos que desea:'),
+        ).toBeInTheDocument();
       });
       const input = screen.getByLabelText(/minutos de descanso/i) as HTMLInputElement;
       expect(input.value).toBe('15');
@@ -89,7 +98,7 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
       // El guardado se rechaza y muestra mensaje exacto de error
       await waitFor(() => {
         expect(
-          screen.getByText('El intervalo debe estar entre 0 y 120 minutos')
+          screen.getByText('El intervalo debe estar entre 0 y 120 minutos'),
         ).toBeInTheDocument();
       });
 
@@ -100,7 +109,9 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
       unmount();
 
       render(<RestPeriodConfig />);
-      const newOpenButton = screen.getByRole('button', { name: /configurar descansos entre reservas/i });
+      const newOpenButton = screen.getByRole('button', {
+        name: /configurar descansos entre reservas/i,
+      });
       fireEvent.click(newOpenButton);
 
       // El campo debe seguir mostrando 15 (el valor no fue modificado)
@@ -110,5 +121,4 @@ describe('US_019 - Pruebas de Interfaz Visual para Configurar descanso entre res
       });
     });
   });
-
 });

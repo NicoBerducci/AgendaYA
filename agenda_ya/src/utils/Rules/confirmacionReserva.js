@@ -9,16 +9,16 @@
  */
 export const validarEmail = (email) => {
   if (!email) {
-    return { 
-      isValid: false, 
-      errorMessage: 'Ingrese un email válido para continuar' 
+    return {
+      isValid: false,
+      errorMessage: 'Ingrese un email válido para continuar',
     };
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.trim())) {
-    return { 
-      isValid: false, 
-      errorMessage: 'Ingrese un email válido para continuar' 
+    return {
+      isValid: false,
+      errorMessage: 'Ingrese un email válido para continuar',
     };
   }
   return { isValid: true };
@@ -29,9 +29,9 @@ export const validarEmail = (email) => {
  */
 export const validarNombre = (nombre) => {
   if (!nombre || nombre.trim().length < 2) {
-    return { 
-      isValid: false, 
-      errorMessage: 'Ingrese un nombre válido para continuar' 
+    return {
+      isValid: false,
+      errorMessage: 'Ingrese un nombre válido para continuar',
     };
   }
   return { isValid: true };
@@ -44,7 +44,7 @@ export const validarTelefono = (telefono) => {
   if (!telefono) {
     return {
       isValid: false,
-      errorMessage: 'Ingrese un teléfono válido para continuar'
+      errorMessage: 'Ingrese un teléfono válido para continuar',
     };
   }
 
@@ -55,7 +55,7 @@ export const validarTelefono = (telefono) => {
   if (contieneLetras.test(telefono) || longitudLimpia < 6) {
     return {
       isValid: false,
-      errorMessage: 'Ingrese un teléfono válido para continuar'
+      errorMessage: 'Ingrese un teléfono válido para continuar',
     };
   }
   return { isValid: true };
@@ -67,16 +67,16 @@ export const validarTelefono = (telefono) => {
  */
 export const validarExpiracion = (horaBloqueo, horaConfirmacion) => {
   const limiteMinutos = 10;
-  
+
   const diferenciaMilisegundos = horaConfirmacion.getTime() - horaBloqueo.getTime();
   const diferenciaMinutos = diferenciaMilisegundos / (1000 * 60);
-  
+
   if (diferenciaMinutos > limiteMinutos) {
-    return { 
-      isValid: false, 
-      errorMessage: 'El tiempo para confirmar la reserva expiró' 
+    return {
+      isValid: false,
+      errorMessage: 'El tiempo para confirmar la reserva expiró',
     };
   }
-  
+
   return { isValid: true };
 };

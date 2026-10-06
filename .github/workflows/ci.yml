@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop, 'hotfix/**']
   push:
-    branches: [main]
+    branches: [main, develop, 'hotfix/**']
 
 jobs:
   build-and-test:
@@ -21,10 +21,14 @@ jobs:
           cache-dependency-path: agenda_ya/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: agenda_ya
 
-      - name: Run linter
+      - name: Formato
+        run: npm run format:check
+        working-directory: agenda_ya
+
+      - name: Lint
         run: npm run lint
         working-directory: agenda_ya
 
@@ -32,14 +36,14 @@ jobs:
         run: npx tsc --noEmit
         working-directory: agenda_ya
 
-      - name: Run tests with coverage
+      - name: Tests
         run: npm test -- --coverage
         working-directory: agenda_ya
 
       - name: Security audit
-        run: npm audit --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
         working-directory: agenda_ya
 
-      - name: Build project
+      - name: Build
         run: npm run build
         working-directory: agenda_ya

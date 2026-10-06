@@ -15,7 +15,10 @@ describe('Configurar descansos entre reservas', () => {
     cy.get('[data-cy="btn-guardar-descanso"]').click();
 
     // Assert
-    cy.get('[data-cy="aviso-descanso"]').should('contain', 'El intervalo entre turnos fue configurado exitosamente');
+    cy.get('[data-cy="aviso-descanso"]').should(
+      'contain',
+      'El intervalo entre turnos fue configurado exitosamente',
+    );
   });
 
   it('TEST 2 - CP_008 (error): Configuración fallida con valor mayor a 120', () => {
@@ -30,6 +33,9 @@ describe('Configurar descansos entre reservas', () => {
     cy.get('[data-cy="btn-guardar-descanso"]').click();
 
     // Assert
-    cy.get('[data-cy="aviso-descanso"]').should('contain', 'El intervalo debe estar entre 0 y 120 minutos');
+    cy.get('[data-cy="aviso-descanso"]').should(
+      'contain',
+      'El intervalo debe estar entre 0 y 120 minutos',
+    );
   });
 });

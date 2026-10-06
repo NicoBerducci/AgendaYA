@@ -1,7 +1,11 @@
-import { validarEmail, validarNombre, validarTelefono, validarExpiracion } from './confirmacionReserva';
+import {
+  validarEmail,
+  validarNombre,
+  validarTelefono,
+  validarExpiracion,
+} from './confirmacionReserva';
 
 describe('Épica: Confirmación de Reserva (Tomás Yanardi)', () => {
-
   // PRUEBA 1: correspondiente a US_033 (Email)
   describe('US_033: Validación de datos obligatorios - Email', () => {
     it('Debe devolver error si se ingresa un email vacío o inválido como "usuario@"', () => {
@@ -73,5 +77,4 @@ describe('Épica: Confirmación de Reserva (Tomás Yanardi)', () => {
       expect(resultado.isValid).toBe(true);
     });
   });
-
 });
