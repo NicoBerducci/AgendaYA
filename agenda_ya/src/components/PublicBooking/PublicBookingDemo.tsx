@@ -60,8 +60,18 @@ function fmtLargo(dateStr: string): string {
   const date = new Date(y, m - 1, d);
   const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
   const meses = [
-    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
   ];
   return `${dias[date.getDay()]} ${date.getDate()} de ${meses[date.getMonth()]}`;
 }
@@ -174,18 +184,18 @@ function DevicePanel({
   const dayName = getDayName(date);
 
   const isTimeInEnabledInterval = (time: string) => {
-    const dayIntervals = activeIntervals.filter(i => i.dia === dayName);
+    const dayIntervals = activeIntervals.filter((i) => i.dia === dayName);
     if (dayIntervals.length === 0) return true; // fallback
-    
+
     const [h, m] = time.split(':').map(Number);
     const tTotal = h * 60 + m;
 
-    return dayIntervals.some(int => {
+    return dayIntervals.some((int) => {
       if (int.enabled === false) return false;
       const [start, end] = int.horario.split(' a ');
       const [sh, sm] = start.split(':').map(Number);
       const [eh, em] = end.split(':').map(Number);
-      return tTotal >= (sh * 60 + sm) && tTotal < (eh * 60 + em);
+      return tTotal >= sh * 60 + sm && tTotal < eh * 60 + em;
     });
   };
 
@@ -271,7 +281,9 @@ function DevicePanel({
   };
 
   const remainingMs = lockedTime && !confirmedBooking ? getRemainingMs(lockedTime) : 0;
-  const expired = (lockedTime !== null && !confirmedBooking && remainingMs <= 0) || errorMsg === 'El tiempo para confirmar la reserva expiró';
+  const expired =
+    (lockedTime !== null && !confirmedBooking && remainingMs <= 0) ||
+    errorMsg === 'El tiempo para confirmar la reserva expiró';
 
   const endTime = lockedTime ? calculateEndTime(lockedTime, 30) : null;
 
@@ -303,28 +315,60 @@ function DevicePanel({
               <StepPill label="3 de 5 — Horarios" />
             </div>
             <div>
-              <div style={{ fontSize: 17, fontWeight: 700, color: PHONE.text }}>Elegí un horario</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: PHONE.text }}>
+                Elegí un horario
+              </div>
               <div style={{ fontSize: 11.5, color: PHONE.muted, marginTop: 2 }}>
                 {fmtLargo(date)} · Consulta general
               </div>
             </div>
 
-            {visibleMorning.length > 0 && <div style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}>MAÑANA</div>}
+            {visibleMorning.length > 0 && (
+              <div
+                style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}
+              >
+                MAÑANA
+              </div>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {visibleMorning.map((time) => (
-                <SlotButton key={time} time={time} state={statusOf(time)} onClick={() => handlePickLocal(time)} />
+                <SlotButton
+                  key={time}
+                  time={time}
+                  state={statusOf(time)}
+                  onClick={() => handlePickLocal(time)}
+                />
               ))}
             </div>
 
-            {visibleAfternoon.length > 0 && <div style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}>TARDE</div>}
+            {visibleAfternoon.length > 0 && (
+              <div
+                style={{ fontSize: 10.5, fontWeight: 700, color: PHONE.muted, letterSpacing: 0.5 }}
+              >
+                TARDE
+              </div>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {visibleAfternoon.map((time) => (
-                <SlotButton key={time} time={time} state={statusOf(time)} onClick={() => handlePickLocal(time)} />
+                <SlotButton
+                  key={time}
+                  time={time}
+                  state={statusOf(time)}
+                  onClick={() => handlePickLocal(time)}
+                />
               ))}
             </div>
 
             {errorMsg && (
-              <div style={{ fontSize: 11.5, color: PHONE.countdownText, background: PHONE.countdownBg, padding: '6px 10px', borderRadius: 6 }}>
+              <div
+                style={{
+                  fontSize: 11.5,
+                  color: PHONE.countdownText,
+                  background: PHONE.countdownBg,
+                  padding: '6px 10px',
+                  borderRadius: 6,
+                }}
+              >
                 {errorMsg}
               </div>
             )}
@@ -344,7 +388,9 @@ function DevicePanel({
                 }}
               >
                 <span>Turno de {pendingTime} hs preseleccionado</span>
-                <span style={{ background: '#fff', borderRadius: 12, padding: '2px 8px', fontSize: 10 }}>
+                <span
+                  style={{ background: '#fff', borderRadius: 12, padding: '2px 8px', fontSize: 10 }}
+                >
                   Reservando
                 </span>
               </div>
@@ -392,7 +438,14 @@ function DevicePanel({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <button
                 onClick={handleResetDevice}
-                style={{ background: 'none', border: 'none', color: PHONE.muted, fontSize: 16, cursor: 'pointer', padding: 0 }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: PHONE.muted,
+                  fontSize: 16,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
                 title="Volver"
               >
                 ↩
@@ -400,7 +453,9 @@ function DevicePanel({
               <StepPill label="4 de 5 — Tus datos" />
             </div>
             <div>
-              <div style={{ fontSize: 17, fontWeight: 700, color: PHONE.text }}>Ingresá tus datos</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: PHONE.text }}>
+                Ingresá tus datos
+              </div>
               <div style={{ fontSize: 11.5, color: PHONE.muted, marginTop: 2 }}>
                 Turno {lockedTime} a {endTime} hs · {fmtLargo(date)}
               </div>
@@ -408,7 +463,15 @@ function DevicePanel({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: PHONE.text, marginBottom: 2 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: PHONE.text,
+                    marginBottom: 2,
+                  }}
+                >
                   Nombre completo *
                 </label>
                 <input
@@ -431,7 +494,15 @@ function DevicePanel({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: PHONE.text, marginBottom: 2 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: PHONE.text,
+                    marginBottom: 2,
+                  }}
+                >
                   Email *
                 </label>
                 <input
@@ -454,7 +525,15 @@ function DevicePanel({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: PHONE.text, marginBottom: 2 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: PHONE.text,
+                    marginBottom: 2,
+                  }}
+                >
                   Teléfono *
                 </label>
                 <input
@@ -477,7 +556,15 @@ function DevicePanel({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: PHONE.text, marginBottom: 2 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: PHONE.text,
+                    marginBottom: 2,
+                  }}
+                >
                   Nota adicional (opcional)
                 </label>
                 <input
@@ -501,7 +588,15 @@ function DevicePanel({
             </div>
 
             {formError && (
-              <div style={{ fontSize: 11, color: PHONE.countdownText, background: PHONE.countdownBg, padding: '4px 8px', borderRadius: 4 }}>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: PHONE.countdownText,
+                  background: PHONE.countdownBg,
+                  padding: '4px 8px',
+                  borderRadius: 4,
+                }}
+              >
                 {formError}
               </div>
             )}
@@ -553,15 +648,26 @@ function DevicePanel({
               Confirmar
             </button>
 
-            <div style={{ fontSize: 10, color: PHONE.muted, borderTop: `1px solid ${PHONE.line}`, paddingTop: 4 }}>
-              Estado backend {lockedTime}: <strong style={{ color: PHONE.text }}>preseleccionado</strong>
+            <div
+              style={{
+                fontSize: 10,
+                color: PHONE.muted,
+                borderTop: `1px solid ${PHONE.line}`,
+                paddingTop: 4,
+              }}
+            >
+              Estado backend {lockedTime}:{' '}
+              <strong style={{ color: PHONE.text }}>preseleccionado</strong>
             </div>
           </>
         )}
 
         {/* PASO 5: PANTALLA DE CONFIRMACIÓN EXITOSA (CP_013 / US_034) */}
         {confirmedBooking && (
-          <div data-cy="reserva-exitosa" style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+          <div
+            data-cy="reserva-exitosa"
+            style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}
+          >
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <StepPill label="5 de 5 — Confirmación" />
             </div>
@@ -607,11 +713,15 @@ function DevicePanel({
             >
               <div data-cy="resumen-evento">
                 <strong style={{ color: PHONE.muted }}>Tipo de evento: </strong>
-                <span style={{ color: PHONE.text, fontWeight: 600 }}>{confirmedBooking.eventType}</span>
+                <span style={{ color: PHONE.text, fontWeight: 600 }}>
+                  {confirmedBooking.eventType}
+                </span>
               </div>
               <div data-cy="resumen-fecha">
                 <strong style={{ color: PHONE.muted }}>Fecha: </strong>
-                <span style={{ color: PHONE.text, fontWeight: 600 }}>{fmtLargo(confirmedBooking.date)}</span>
+                <span style={{ color: PHONE.text, fontWeight: 600 }}>
+                  {fmtLargo(confirmedBooking.date)}
+                </span>
               </div>
               <div data-cy="resumen-horario">
                 <strong style={{ color: PHONE.muted }}>Horario: </strong>
@@ -621,7 +731,9 @@ function DevicePanel({
               </div>
               <div data-cy="resumen-nombre">
                 <strong style={{ color: PHONE.muted }}>Nombre: </strong>
-                <span style={{ color: PHONE.text, fontWeight: 600 }}>{confirmedBooking.fullName}</span>
+                <span style={{ color: PHONE.text, fontWeight: 600 }}>
+                  {confirmedBooking.fullName}
+                </span>
               </div>
               <div>
                 <strong style={{ color: PHONE.muted }}>Email: </strong>
@@ -639,7 +751,9 @@ function DevicePanel({
               )}
             </div>
 
-            <div style={{ fontSize: 10.5, color: PHONE.teal, fontWeight: 600, textAlign: 'center' }}>
+            <div
+              style={{ fontSize: 10.5, color: PHONE.teal, fontWeight: 600, textAlign: 'center' }}
+            >
               Estado backend: <strong style={{ textTransform: 'uppercase' }}>reservado</strong>
             </div>
 
@@ -665,13 +779,32 @@ function DevicePanel({
 
         {/* PANTALLA DE RECHAZO POR EXPIRACIÓN (CP_014 / US_035) */}
         {expired && !confirmedBooking && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, flex: 1, textAlign: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
+              flex: 1,
+              textAlign: 'center',
+            }}
+          >
             <div style={{ fontSize: 36 }}>⏱</div>
-            <div data-cy="error-timeout" style={{ fontSize: 13.5, fontWeight: 700, color: PHONE.countdownText, lineHeight: 1.4 }}>
+            <div
+              data-cy="error-timeout"
+              style={{
+                fontSize: 13.5,
+                fontWeight: 700,
+                color: PHONE.countdownText,
+                lineHeight: 1.4,
+              }}
+            >
               El tiempo para confirmar la reserva expiró
             </div>
             <div style={{ fontSize: 11, color: PHONE.muted }}>
-              El horario temporalmente reservado fue liberado y se encuentra disponible nuevamente para todos los usuarios.
+              El horario temporalmente reservado fue liberado y se encuentra disponible nuevamente
+              para todos los usuarios.
             </div>
             <button
               onClick={handleResetDevice}
@@ -738,7 +871,9 @@ export const PublicBookingDemo: React.FC<PublicBookingDemoProps> = ({ targetDate
           Reserva Pública Mobile — Confirmación y Bloqueo Temporal (CP_011 / CP_013 / CP_014)
         </h2>
         <p style={{ fontSize: 13, color: T.muted, margin: 0 }}>
-          M04-R04F (US_034, US_035). Permite experimentar la selección de turno, el bloqueo de 10 minutos, la confirmación con datos personales y el rechazo automático por expiración con sincronización en tiempo real entre dispositivos.
+          M04-R04F (US_034, US_035). Permite experimentar la selección de turno, el bloqueo de 10
+          minutos, la confirmación con datos personales y el rechazo automático por expiración con
+          sincronización en tiempo real entre dispositivos.
         </p>
       </div>
 
@@ -806,9 +941,7 @@ export const PublicBookingDemo: React.FC<PublicBookingDemoProps> = ({ targetDate
                   <span style={{ fontSize: 10, textTransform: 'uppercase' }}>{slot.status}</span>
                 </div>
                 {slot.booking && (
-                  <span style={{ fontSize: 10, color: '#450A0A' }}>
-                    👤 {slot.booking.fullName}
-                  </span>
+                  <span style={{ fontSize: 10, color: '#450A0A' }}>👤 {slot.booking.fullName}</span>
                 )}
               </div>
             );
@@ -840,7 +973,11 @@ export const PublicBookingDemo: React.FC<PublicBookingDemoProps> = ({ targetDate
                     <strong>{r.fullName}</strong> ({r.email} - {r.phone})
                   </div>
                   <div>
-                    Turno: <strong>{r.time} a {r.endTime} hs</strong> · {r.eventType}
+                    Turno:{' '}
+                    <strong>
+                      {r.time} a {r.endTime} hs
+                    </strong>{' '}
+                    · {r.eventType}
                   </div>
                 </div>
               ))}

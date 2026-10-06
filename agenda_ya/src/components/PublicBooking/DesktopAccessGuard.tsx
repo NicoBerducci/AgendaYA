@@ -100,7 +100,16 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 8, background: T.panel, padding: 4, borderRadius: 8, border: `1px solid ${T.lineStrong}` }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            background: T.panel,
+            padding: 4,
+            borderRadius: 8,
+            border: `1px solid ${T.lineStrong}`,
+          }}
+        >
           {(['desktop', 'mobile'] as DeviceType[]).map((opt) => (
             <button
               key={opt}
@@ -123,7 +132,9 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
           ))}
         </div>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: T.text }}>
+        <label
+          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: T.text }}
+        >
           <input
             type="checkbox"
             data-cy="checkbox-ventana-angosta"
@@ -155,7 +166,9 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
 
         {!isBlocked && (
           <>
-            <div style={{ fontSize: 13, fontWeight: 700, color: T.text }}>Seleccioná el tipo de evento</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: T.text }}>
+              Seleccioná el tipo de evento
+            </div>
             <select
               value={eventType}
               onChange={(e) => setEventType(e.target.value)}

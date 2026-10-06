@@ -29,8 +29,10 @@ describe('CP_006 - Intento de bloqueo de un día con reservas activas (Adriel)',
     fechaInicio.setDate(fechaInicio.getDate() + 7);
     const fechaDestino = new Date();
     fechaDestino.setDate(fechaDestino.getDate() + 10);
-    const diffMeses = (fechaDestino.getFullYear() - fechaInicio.getFullYear()) * 12 + (fechaDestino.getMonth() - fechaInicio.getMonth());
-    
+    const diffMeses =
+      (fechaDestino.getFullYear() - fechaInicio.getFullYear()) * 12 +
+      (fechaDestino.getMonth() - fechaInicio.getMonth());
+
     for (let i = 0; i < diffMeses; i++) {
       cy.get('[data-cy="mes-siguiente"]').click();
     }

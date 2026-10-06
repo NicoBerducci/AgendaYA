@@ -21,7 +21,7 @@ describe('CP_014 - Rechazo de confirmación por timeout', () => {
     cy.get('[data-cy="error-timeout"]')
       .should('be.visible')
       .and('contain', 'El tiempo para confirmar la reserva expiró');
-      
+
     cy.get('[data-cy="btn-elegir-nuevo-horario"]').should('be.visible');
   });
 });

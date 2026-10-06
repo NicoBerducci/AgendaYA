@@ -1,4 +1,7 @@
-import { blockDayWithoutReservations, deleteIntervalWithoutReservations } from '../utils/blocks/blocks';
+import {
+  blockDayWithoutReservations,
+  deleteIntervalWithoutReservations,
+} from '../utils/blocks/blocks';
 
 export interface IntervalItem {
   id: number;
@@ -82,7 +85,7 @@ const defaultState: ScheduleState = {
       status: 'Disponible',
       activeReservations: 5,
       isPublicSelectable: true,
-    }
+    },
   },
   reservations: [
     { id: 101, intervalId: 1, fecha: 'F+7', estado: 'confirmada' },
@@ -131,7 +134,7 @@ export const blockDay = async (
   dateStr: string,
   hasConfirmed: boolean,
   currentDate: Date = new Date(),
-  reason: string = ''
+  reason: string = '',
 ): Promise<{ isValid: boolean; errorMessage?: string; successMessage?: string; day?: DayItem }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -194,7 +197,10 @@ export const getWorkDays = async (): Promise<string[]> => {
 /**
  * Guarda los días y los intervalos desde la pantalla de configuración.
  */
-export const saveWorkDaysAndIntervals = async (workDays: string[], intervals: IntervalItem[]): Promise<boolean> => {
+export const saveWorkDaysAndIntervals = async (
+  workDays: string[],
+  intervals: IntervalItem[],
+): Promise<boolean> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       currentState.workDays = [...workDays];
@@ -210,8 +216,13 @@ export const saveWorkDaysAndIntervals = async (workDays: string[], intervals: In
  */
 export const deleteInterval = async (
   intervalId: number,
-  hasConfirmed: boolean
-): Promise<{ isValid: boolean; errorMessage?: string; successMessage?: string; intervals: IntervalItem[] }> => {
+  hasConfirmed: boolean,
+): Promise<{
+  isValid: boolean;
+  errorMessage?: string;
+  successMessage?: string;
+  intervals: IntervalItem[];
+}> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const interval = currentState.intervals.find((i) => i.id === intervalId);
@@ -221,7 +232,7 @@ export const deleteInterval = async (
         currentState.intervals,
         intervalId,
         hasConfirmed,
-        activeReservations
+        activeReservations,
       );
 
       if (!validation.isValid) {
@@ -262,13 +273,22 @@ export const getReservations = async (): Promise<ReservationItem[]> => {
  */
 export const toggleIntervalStatus = async (
   intervalId: number,
-  enabled: boolean
-): Promise<{ isValid: boolean; errorMessage?: string; successMessage?: string; intervals: IntervalItem[] }> => {
+  enabled: boolean,
+): Promise<{
+  isValid: boolean;
+  errorMessage?: string;
+  successMessage?: string;
+  intervals: IntervalItem[];
+}> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const intervalIndex = currentState.intervals.findIndex((i) => i.id === intervalId);
       if (intervalIndex === -1) {
-        resolve({ isValid: false, errorMessage: 'Intervalo no encontrado', intervals: currentState.intervals });
+        resolve({
+          isValid: false,
+          errorMessage: 'Intervalo no encontrado',
+          intervals: currentState.intervals,
+        });
         return;
       }
 
@@ -277,7 +297,7 @@ export const toggleIntervalStatus = async (
       // Si se intenta deshabilitar, verificar que no sea el último activo del día (M02-R03F)
       if (!enabled) {
         const activosDelDia = currentState.intervals.filter(
-          (i) => i.dia === interval.dia && i.enabled !== false
+          (i) => i.dia === interval.dia && i.enabled !== false,
         );
         if (activosDelDia.length <= 1) {
           resolve({
