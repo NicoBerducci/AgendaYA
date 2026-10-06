@@ -47,7 +47,17 @@ function BlockDialog() {
           <line x1="15" y1="9" x2="9" y2="15" />
           <line x1="9" y1="9" x2="15" y2="15" />
         </svg>
-        <div data-cy="mensaje-bloqueo-desktop" style={{ fontSize: 16, fontWeight: 500, color: '#333', textAlign: 'center', flex: 1, lineHeight: 1.4 }}>
+        <div
+          data-cy="mensaje-bloqueo-desktop"
+          style={{
+            fontSize: 16,
+            fontWeight: 500,
+            color: '#333',
+            textAlign: 'center',
+            flex: 1,
+            lineHeight: 1.4,
+          }}
+        >
           {BLOCK_MESSAGE}
         </div>
       </div>

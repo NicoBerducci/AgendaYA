@@ -288,7 +288,10 @@ function DevicePanel({
   const endTime = lockedTime ? calculateEndTime(lockedTime, 30) : null;
 
   return (
-      <div data-cy={`device-panel-${deviceId}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+    <div
+      data-cy={`device-panel-${deviceId}`}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
+    >
       <div style={{ fontSize: 11.5, fontWeight: 700, color: '#5B6B6E', fontFamily: FONT }}>
         📱 {deviceLabel} — Usuario invitado
       </div>

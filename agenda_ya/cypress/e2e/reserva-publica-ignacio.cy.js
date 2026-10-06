@@ -26,9 +26,7 @@ describe('CP_011_012 - Reserva pública (Bloqueo temporal y acceso desde Desktop
           .click();
 
         // Act: confirmar la preselección con "Continuar"
-        cy.get('[data-cy="device-panel-device-a"]')
-          .find('[data-cy="btn-continuar"]')
-          .click();
+        cy.get('[data-cy="device-panel-device-a"]').find('[data-cy="btn-continuar"]').click();
 
         // Assert: aparece el contador regresivo de 10 minutos en el Dispositivo A
         cy.get('[data-cy="device-panel-device-a"]')
@@ -53,8 +51,10 @@ describe('CP_011_012 - Reserva pública (Bloqueo temporal y acceso desde Desktop
     cy.get('[data-cy="pantalla-bloqueo-desktop"]').should('be.visible');
 
     // Assert: el mensaje de bloqueo es el definido para la restricción
-    cy.get('[data-cy="mensaje-bloqueo-desktop"]')
-      .should('contain', 'únicamente desde dispositivos móviles');
+    cy.get('[data-cy="mensaje-bloqueo-desktop"]').should(
+      'contain',
+      'únicamente desde dispositivos móviles',
+    );
 
     // Act: achicar la ventana para simular una resolución de celular
     cy.get('[data-cy="checkbox-ventana-angosta"]').check();
