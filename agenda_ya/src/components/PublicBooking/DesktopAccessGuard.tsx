@@ -19,6 +19,7 @@ const BLOCK_MESSAGE =
 function BlockDialog() {
   return (
     <div
+      data-cy="pantalla-bloqueo-desktop"
       style={{
         width: '100%',
         background: '#fff',
@@ -47,6 +48,7 @@ function BlockDialog() {
           <line x1="9" y1="9" x2="15" y2="15" />
         </svg>
         <div
+          data-cy="mensaje-bloqueo-desktop"
           style={{
             fontSize: 16,
             fontWeight: 500,
@@ -121,6 +123,7 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
           {(['desktop', 'mobile'] as DeviceType[]).map((opt) => (
             <button
               key={opt}
+              data-cy={opt === 'desktop' ? 'btn-user-agent-desktop' : 'btn-user-agent-mobile'}
               onClick={() => setUserAgent(opt)}
               style={{
                 background: userAgent === opt ? T.sideActive : 'transparent',
@@ -144,6 +147,7 @@ export const DesktopAccessGuard: React.FC<DesktopAccessGuardProps> = ({ theme })
         >
           <input
             type="checkbox"
+            data-cy="checkbox-ventana-angosta"
             checked={narrowWindow}
             onChange={(e) => setNarrowWindow(e.target.checked)}
           />

@@ -9,6 +9,7 @@ import {
   selectSlot,
   confirmBooking,
   expireLock,
+  calculateEndTime,
 } from './publicBookingService';
 
 describe('publicBookingService — Módulo 4: Reserva Pública', () => {
@@ -53,6 +54,47 @@ describe('publicBookingService — Módulo 4: Reserva Pública', () => {
 
       const result = selectSlot('10:30', 'device-b');
       expect(result.ok).toBe(true);
+    });
+  });
+
+  describe('CP_011 (complementario): calculateEndTime y validaciones adicionales de selectSlot (Gracia Ignacio)', () => {
+    it('calcula correctamente un turno de 30 minutos dentro de la misma hora (caso normal)', () => {
+      expect(calculateEndTime('10:00', 30)).toBe('10:30');
+    });
+
+    it('calcula correctamente un turno que cruza al inicio de la hora siguiente (caso borde)', () => {
+      expect(calculateEndTime('14:30', 30)).toBe('15:00');
+    });
+
+    it('no envuelve el resultado al cruzar la medianoche (caso borde, limitación encontrada)', () => {
+      // La función no aplica módulo 24 sobre las horas: un turno que cruza
+      // las 24:00 devuelve "24:20" en lugar de "00:20". No afecta a este
+      // proyecto porque ningún horario público se acerca a la medianoche,
+      // pero es una limitación real del código a tener en cuenta.
+      expect(calculateEndTime('23:50', 30)).toBe('24:20');
+    });
+
+    it('rechaza la selección de un horario que no existe en la agenda (caso error)', () => {
+      const result = selectSlot('09:00', 'device-a');
+      expect(result.ok).toBe(false);
+      expect(result.message).toBe('Horario inválido');
+    });
+
+    it('rechaza la selección de un horario ya reservado (estado "reservado", no solo "preseleccionado")', () => {
+      // El caso ya cubierto arriba prueba el conflicto contra un turno
+      // todavía "preseleccionado". Este caso cubre la otra rama de la
+      // misma validación: un turno que ya pasó por confirmBooking y
+      // quedó en estado "reservado".
+      selectSlot('10:00', 'device-a');
+      confirmBooking('10:00', 'device-a', {
+        fullName: 'Cliente de prueba',
+        email: 'cliente@test.com',
+        phone: '2604000000',
+      });
+
+      const conflict = selectSlot('10:00', 'device-b');
+      expect(conflict.ok).toBe(false);
+      expect(conflict.message).toBe('El horario ya no está disponible');
     });
   });
 
