@@ -271,7 +271,7 @@ export const WorkDayConfig: React.FC<WorkDayConfigProps> = ({ theme }) => {
           const start2 = s2H * 60 + s2M;
           const end2 = e2H * 60 + e2M;
 
-          if (start1 <= end2 && start2 <= end1) {
+          if (start1 < end2 && start2 < end1) {
             setAlertState({
               open: true,
               tipo: 'err',
